@@ -22,7 +22,7 @@ You can get a copy of this project up and running on your local machine using gi
 
 ### Prerequisites
 
-To run this you will need of **Mongodb**, **NPM** and **Node**
+To install this project you need to have **Mongodb**, **NPM** and **Node** installed
 
 ### Installing
 
