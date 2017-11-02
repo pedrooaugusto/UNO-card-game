@@ -1,13 +1,14 @@
 # UNO-card-game
 
-The UNO card game built in MERN stack. A online UNO card game version built with Node, React and SocketIO. The application consist mainly of three pages:
+The UNO card game built in MERN stack. <br/>A online UNO card game version built with Node, React and SocketIO.<br/> The application consist mainly of three pages:
 * [Home] In this page you can select or create a room to play
 * [Hall] In this page you wait for more people join to that room to start the game, if needed. (theres a chat too)
 * [Game] The actual game, in this page you play UNO with everyone in that room.
 
 # Online Version
+https://uno-card-game.herokuapp.com/
+
 Since I am using heroku for free the app will take while to start, but it will be worth.
-[https://uno-card-game.herokuapp.com/]
 
 ## WARNING
 The project is not done yet... I would say:
