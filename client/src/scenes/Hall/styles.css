@@ -1,0 +1,69 @@
+.players{
+	margin-top: 5px;
+	text-align: center;
+	display: flex;
+	flex-flow: row;
+	align-items: center;
+	align-content: center;
+	justify-content: center;
+	width: 100%;
+}
+.player{
+	margin-left: 5px;
+	margin-right: 5px;
+	line-height: 30px;
+	text-align: center;
+	width: 30px;
+	height: 30px;
+	color: white;
+	font-weight: 500;
+	font-size: 1.3rem;
+	border-radius: 1cm;
+}
+.messages{
+	padding: 5px;
+	border-radius: 5px;
+	margin-top: 5px;
+	width: 100%;
+	height: 350px;
+	background-color: #eee;
+	overflow-y: auto;
+}
+.player.me{
+	background-color: #3f51b5 !important;
+	width: 40px;
+	height: 40px;
+	line-height: 40px;
+}
+.message{
+	border-radius: 5px;
+	padding: 5px;
+	background-color: white;
+	margin: 2px;
+	margin-bottom: 10px;
+}
+.message.me{
+	background-color: rgb(204, 201, 251);
+}
+.message__header{
+	font-size: 0.85rem;
+	display: flex;
+	flex-flow: row;
+}
+.message__header__time{
+	margin-left: 10px;
+}
+.message__text{
+	margin-top: 5px;
+}
+.inputText textarea{
+	border: solid 1px #03a9f4;
+	border-radius: 1px;
+	height: 60px;
+}
+.scene--hall .foot{
+	padding: 5px;
+	color: black;
+	text-align: center;
+	font-size: 1.1rem;
+}

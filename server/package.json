@@ -1,0 +1,29 @@
+{
+  "name": "uno-card-game",
+  "version": "1.0.0",
+  "description": "Implentação do popular jogo de cartas Uno",
+  "main": "app.js",
+  "engines": {
+    "node": "8.2.1",
+    "npm": "5.3.0"
+  },
+  "dependencies": {
+    "body-parser": "latest",
+    "ejs": "latest",
+    "express": "latest",
+    "express-session": "latest",
+    "socket.io": "^2.0.3"
+  },
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Nodejs",
+    "Socket.io",
+    "Uno",
+    "Express"
+  ],
+  "author": "Pedro Augusto",
+  "license": "ISC"
+}

@@ -1,0 +1,47 @@
+.content{
+	padding: 10px;
+	min-height: 350px;
+}
+.content h5{
+	text-align: center;
+}
+.rooms-list-wrapper{
+	max-height: 300px;
+	overflow-y: auto; 
+}
+@media screen and (min-width: 600px) {
+	.content
+	{
+		min-height: 400px; 
+	}
+}
+.rooms-list thead, .rooms-list thead tr{
+	border: none !important;
+}
+table.rooms-list>tbody>tr{
+	transition: all 0.2s linear;
+	cursor: pointer;
+}
+
+table.rooms-list>tbody>tr:hover{
+	background-color: #fbfbfb;
+}
+
+table.rooms-list>tbody>tr:active{
+	border-bottom: 1px solid black;
+	background-color: #fbfbfb;
+}
+table.rooms-list>tbody>tr>td{
+	border-radius: 0px;
+}
+table.rooms-list .material-icons{
+	color: #3f51b5;
+}
+table.rooms-list>tbody>tr>td:last-child{
+	border-top-right-radius: 3px;
+	border-bottom-right-radius: 3px; 
+}
+table.rooms-list>tbody>tr>td:first-child{
+	border-top-left-radius: 3px;
+	border-bottom-left-radius: 3px; 
+}

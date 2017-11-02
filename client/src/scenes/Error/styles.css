@@ -1,0 +1,56 @@
+.scene--error{
+	min-height: 100vh;
+	height: 100vh;
+	//background-color: #4caf50;
+}
+.error--container{
+	display: flex;
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	max-width: 100%;
+}
+.error--container .row{
+	margin: 0 auto;
+}
+.error--wrapper{
+	height: 100%;
+	width: 100%;
+}
+.error__statusCode{
+	text-align: center;
+}
+.error__statusCode .txt{
+	text-align: center;
+	font-size: 1rem;
+}
+.error__statusCode .code{
+	font-size: 5rem;
+	font-weight: 600;
+}
+.error__primaryText{
+	font-size: 1.6rem;
+	text-align: center;
+	word-spacing: 0.3rem;
+}
+.error__primaryText .bold{
+	font-weight: bold;
+	font-size: 2rem;
+}
+.error__secondaryText{
+	margin-top: 15px;
+	font-size: 1.3rem;
+	text-align: center;
+}
+.error__homeButton{
+	font-size: 1.3rem;
+	text-align: center;
+	margin-top: 10px;
+}
+.error__gitButton{
+	font-size: 1rem;
+	text-align: center;
+	margin-top: 10px;
+}
