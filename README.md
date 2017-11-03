@@ -18,7 +18,11 @@ The project is not done yet... I would say:
 
 ## Getting Started
 
-You can get a copy of this project up and running on your local machine using git clone https://github.com/pedrooaugusto/UNO-card-game.git
+You can get a copy of this project up and running on your local machine using:
+
+```
+git clone https://github.com/pedrooaugusto/UNO-card-game.git
+```
 
 ### Prerequisites
 
