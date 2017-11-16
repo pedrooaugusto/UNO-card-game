@@ -31,7 +31,7 @@ class HallStoreAction extends HallStore{
 		});
 		Socket.getSocket().on("/hall/join-room/check/fail", data => {
 			console.log(data);
-			History.push("/error");
+			History.push("/nopermission");
 		});
 	}
 	checkCredentials(){

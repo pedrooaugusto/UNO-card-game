@@ -18,7 +18,7 @@ module.exports = function(socket){
             socket.broadcast.to(user.room).emit("/hall/new-message", {
                 from: {id: "THE DOCTOR", name: "SYSTEM"},
                 time: new Date().toLocaleString("bali"),
-                text: `${user.name} siu da sala.`
+                text: `${user.name} saiu da sala.`
             });
             user.room = "ghost"; // \_(O.O)_/ idk...
             socket.broadcast.to("home").emit("/home/load-all-rooms", database.rooms);
@@ -42,7 +42,7 @@ module.exports = function(socket){
     });
 
     
-    /* Request info of room */
+    /* Request info of a room */
     socket.on("/home/load-room-info", data => {
         const room = database.rooms.find(a => a.name === data);
         const players = database.users.filter(a => a.room === data);
@@ -67,7 +67,7 @@ module.exports = function(socket){
             socket.leave("home");
             player.room = data.name;
             player.name = data.nickName;
-
+            player.connectedSince = new Date().getTime();
             socket.broadcast.to("home").emit("/home/load-all-rooms", database.rooms);
             socket.emit("/home/create-room/success", {
                 created: true,
@@ -89,11 +89,17 @@ module.exports = function(socket){
 	    if(exist !== undefined)
 	    	return socket.emit("/home/join-room/fail", "Este nickname já existe");
 	    const player = database.users.find(a => a.id === socket.id);
-	    socket.leave("home");
-	    player.room = room.name;
-	    player.name = data.nickName;
-        room.numberOfPlayers += 1;
-
-	    socket.emit("/hall/join-room/successful", room.name);
+	    if(player)
+        {
+            socket.leave("home");
+    	    player.room = room.name;
+    	    player.name = data.nickName;
+            player.connectedSince = new Date().getTime();
+    	    socket.emit("/hall/join-room/successful", room.name);
+        }
+        else
+        {
+            socket.emit("/home/join-room/fail", "Something went wrong!");
+        }
 	});
 };

@@ -20,7 +20,7 @@ class RoomInfoModalStore extends ReduceStore
 				return state.set('isOpen', false).set('message', '');
 
 			case MenuActionTypes.ROOM_INFO_MODAL_OPEN:
-				return state.set('isOpen', true);
+				return state.set('isOpen', true).set('message', '');
 
 			case MenuActionTypes.ROOM_INFO_MODAL_LOAD_DATA_START:
 				return state
@@ -39,7 +39,7 @@ class RoomInfoModalStore extends ReduceStore
 				return state.set('message', action.data);
 
 			case MenuActionTypes.ROOM_INFO_MODAL_JOIN_ROOM_SUCCESSFULL:
-				return state.set('message', "Redirecting...");
+				return state.set('message', "Redirecting...").set('isOpen', false);
 
 			default:
 				return state; 
@@ -48,4 +48,3 @@ class RoomInfoModalStore extends ReduceStore
 }
 
 export default RoomInfoModalStore;
-//export default new RoomInfoModalStore();

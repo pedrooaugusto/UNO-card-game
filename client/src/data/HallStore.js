@@ -20,7 +20,7 @@ class HallStore extends ReduceStore
 				return state
 					.update('room', a => undefined)
 					.update('players', a => undefined);
-
+					
 			case MenuActionTypes.HALL_LOAD_DATA_SUCCESSFUL:
 				return state
 					.update('room', a => action.data.room)

@@ -1,7 +1,91 @@
 import React from 'react';
 import './styles.css';
+import Title from './components/Title';
+import PlayersList from './components/PlayersList';
+import Messages from './components/Messages';
+import BelowMessageList from './components/BelowMessageList';
+import PlayerInfoModal from './components/PlayerInfoModal';
 
 class Hall extends React.Component{
+	componentWillMount() {
+		this.props.hall.checkCredentials();
+	}
+	quit = () => {
+		const answer = window.confirm("Deseja realmente sair da sala? (theres no coming back)");
+		if(answer)
+			this.props.history.push("/");
+	}
+	handleSendMessage = (event) => {
+		if(event.keyCode === 13 && event.target.value !== ""){
+			console.log(this.refs);
+			const message = {
+				from: {id: this.props.socketID, name: ''},
+				text: event.target.value,
+				room: this.props.hall.room.name
+			};
+			this.props.hall.sendMessage(message);
+			event.target.value = "";
+		}
+	}
+	render(){
+		if(this.props.hall.room === undefined)
+			return (<center><h1>LOADING....</h1></center>);
+		return(
+			<div className="scene--hall">
+				<div className="container">
+					<div className="row">
+						<div className="col s12 l12">
+							<Title name = {this.props.hall.room.name}/>
+						</div>
+					</div>
+					<div className="row">
+						<div className="col s12 l12">
+							<PlayersList
+								socketID = {this.props.socketID}
+								capacity = {this.props.hall.room.capacity}
+								players = {this.props.hall.players}
+								onModalOpen = {this.props.playerInfo.onModalOpen}/>
+						</div>
+					</div>
+					<div className="row">
+						<div className="col s12 l6 offset-l3">
+							<Messages
+								socketID = {this.props.socketID}
+								messages = {this.props.hall.messages}/>
+						</div>
+					</div>
+					<div className="row">
+						<BelowMessageList
+							sendMessage = {this.handleSendMessage}
+							diff = {this.props.hall.room.capacity - this.props.hall.players.length}
+							quit = {this.quit}/>
+					</div>
+				</div>
+				<PlayerInfoModal
+					roomAdmin = {this.props.hall.room.admin}
+					isOpen = {this.props.playerInfo.isOpen}
+					loadStatus = {this.props.playerInfo.loadStatus}
+					message = {this.props.playerInfo.message}
+					player = {this.props.playerInfo.player}
+					freeSpot = {this.props.playerInfo.freeSpot} 
+					onCloseModal={this.props.playerInfo.onModalClose}
+					socketID = {this.props.socketID}/>
+			</div>
+		);
+	}
+}
+
+export default Hall;
+
+
+
+
+
+
+
+
+
+/*class Hall extends React.Component{
 
 	componentWillMount() {
 		this.props.hall.checkCredentials();
@@ -120,4 +204,4 @@ class Hall extends React.Component{
 		);
 	}
 }
-export default Hall;
+export default Hall;*/

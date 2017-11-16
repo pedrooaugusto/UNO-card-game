@@ -15,14 +15,14 @@ function AppView(props) {
 				<Route path="/hall/:name">
 					<Hall history = {History} {...props} />
 				</Route>
-				<Route path="/error">
-					<Error statusCode = {404} message = {"Esta página não existe"} {...props} />
-				</Route>
 				<Route path="/nopermission">
 					<Error 
 						statusCode = {500}
 						message = {"Você não tem permissão para acessar esta sala"} 
 						{...props} />
+				</Route>
+				<Route>
+					<Error statusCode = {404} message = {"Esta página não existe"} {...props} />
 				</Route>
 			</Switch>
 		</Router>

@@ -1,6 +1,7 @@
 import openSocket from 'socket.io-client';
 
-const socket = openSocket("http://127.0.0.1:3001/app");
+//http://127.0.0.1:3001
+const socket = openSocket("/app");
 //eslint-disable-next-line
 let room;
 

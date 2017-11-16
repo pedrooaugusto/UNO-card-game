@@ -10,7 +10,7 @@ const database = require("./database");
 
 module.exports = function(socket){
     
-    /* Check if a player can join the room */
+    /* Check if a player can join to the room */
     socket.on("/hall/join-room/check", data => {
         
         const room = database.rooms.find(a => a.name === data.room);
@@ -28,6 +28,7 @@ module.exports = function(socket){
                 "Esta sala esta lotada :(");
         
         socket.join(room.name);
+        room.numberOfPlayers += 1;
         if(database.users.filter(a => a.room === room.name).length === room.capcity)
             room.status = "IN GAME";
 
@@ -51,5 +52,18 @@ module.exports = function(socket){
     socket.on("/hall/new-message", data => {
         data.from.name = database.users.find(a => a.id === socket.id).name;
         socket.nsp.to(data.room).emit("/hall/new-message", data);
+    });
+
+    /* Sending info a about the player */
+    socket.on("/hall/load-info-player", data => {
+        const room = Object.values(socket.rooms)[1];
+        const p = database.users.find(a => a.name === data);
+        if(p)
+            return socket.nsp.to(room).emit("/hall/load-info-player-success", {
+                player: p, message: "Ok"
+            });
+        return socket.nsp.to(room).emit("/hall/load-info-player-fail", {
+            player: undefined, message: "Ocorreu um erro..."
+        });
     });
 };

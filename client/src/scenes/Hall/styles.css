@@ -1,69 +1,338 @@
-.players{
-	margin-top: 5px;
+.scene--hall{
+	/*background-image: linear-gradient(to bottom, 
+		var(--bg-hall-secondary-color),
+		var(--bg-hall-secondary-color) 60%,
+		var(--bg-hall-primary-color) 60%,
+		var(--bg-hall-primary-color) 100%);*/
+	background-color: var(--bg-hall-secondary-color);
+	background-repeat: no-repeat;
+	background-size: 100%;
+	min-height: 100vh;
+	width: auto;
+	height: 100%;
+}
+
+@media only screen and (max-width: 600px){
+	.hall__room__title{
+		font-size: 2.7rem;		
+	}	
+	.hall__room__players__list__player{
+		width: 35px;
+		height: 35px;
+		border-width: 1px;
+	}
+	.hall__room__players__list__player.myself{
+		width: 40px;
+		height: 40px;
+	}
+	.hall__room__messages{
+		max-height: 300px;
+		height: 300px;
+	}
+	.hall__room__messages__message--wrapper{
+		margin-bottom: 5px;
+	}
+	.hall__room__messages__message{
+		font-size: 0.9rem;
+	}
+	.hall__room__buttons__button{
+		margin-top: 5px;
+		float: left;
+		line-height: 40px;
+		width: 40px;
+		height: 40px;
+	}
+	.scene--hall__reactModal{
+		position: absolute;
+		min-width: 85%;
+		max-width: 85%;
+        top: 35%;
+        min-height: 45%;
+        left: 50%;
+        right: auto;
+        bottom: auto;
+        margin-right: -50%;
+        transform: translate(-50%, -50%);
+        border: none;
+        border-radius: 0px;
+        background-color: white;
+	}
+	.scene--hall__reactModal:focus{
+		outline: none;
+	}
+	.playerDeatails__buttons{
+		margin-top: 5px;
+	}
+}
+@media only screen and (min-width: 601px){
+	.hall__room__title{
+		font-size: 3.5rem;		
+	}	
+	.hall__room__players__list__player{
+		width: 45px;
+		height: 45px;
+		border-width: 2px;
+	}
+	.hall__room__players__list__player.myself{
+		width: 50px;
+		height: 50px;
+	}
+	.hall__room__messages{
+		max-height: 300px;
+		height: 300px;
+	}
+	.hall__room__messages__message--wrapper{
+		margin-bottom: 5px;
+	}
+	.hall__room__messages__message{
+		font-size: 1rem;
+	}
+	.hall__room__buttons__button{
+		margin-top: 0px;
+		float: right;
+		line-height: 45px;
+		width: 45px;
+		height: 45px;
+	}
+	.scene--hall__reactModal{
+		position: absolute;
+		min-width: 30%;
+		max-width: 30%;
+        top: 30%;
+        min-height: 40%;
+        height: 45%;
+        left: 50%;
+        right: auto;
+        bottom: auto;
+        margin-right: -50%;
+        transform: translate(-50%, -50%);
+        border: none;
+        border-radius: 0px;
+        background-color: white;
+	}
+	.scene--hall__reactModal:focus{
+		outline: none;
+	}
+	.playerDeatails__buttons{
+		margin-top: 10px;
+	}
+}
+
+.hall__room__title{
 	text-align: center;
+	font-weight: bolder;
+	margin-bottom: 0px;
+    color: #2196F3;
+	text-shadow: 2px 2px 0px #ffe502, 1px 1px 0px #ffe604;
+}
+.hall__room__title__description{
+	text-align: center;
+	font-size: 1rem;
+	font-weight: 400;
+	color: white;
+}
+.hall__room__title__divisor{
+	text-align: center;
+	font-size: 1.5rem;
+	font-weight: 100;
+	color: white;
+}
+.hall__room__players__title--label{
+	font-size: 1rem;
+	color: white;
+	font-weight: bold;
+}
+.hall__room__players__list{
 	display: flex;
-	flex-flow: row;
+	justify-content: center;
+}
+.hall__room__players__list__player{
+	margin-left: 2px;
+	margin-right: 2px;
+	border-style: solid;
+	border-color: white;
+	border-radius: 1cm;
+	font-size: 1.5rem;
+	display: flex;
 	align-items: center;
 	align-content: center;
+	vertical-align: middle;
 	justify-content: center;
-	width: 100%;
-}
-.player{
-	margin-left: 5px;
-	margin-right: 5px;
-	line-height: 30px;
-	text-align: center;
-	width: 30px;
-	height: 30px;
 	color: white;
-	font-weight: 500;
-	font-size: 1.3rem;
-	border-radius: 1cm;
+	cursor: pointer;
+	transition-duration: 0.2s;
 }
-.messages{
+.hall__room__players__list__player.myself{
+	border-color: var(--bg-hall-primary-color);
+}
+.hall__room__players__list__player:hover{
+	border-color: var(--bg-hall-secondary-color);
+	background-color: white;
+	color: var(--bg-hall-secondary-color);
+}
+.hall__room__messages__message--wrapper{
+	height: auto;
+}
+
+.hall__room__messages{
 	padding: 5px;
-	border-radius: 5px;
-	margin-top: 5px;
-	width: 100%;
-	height: 350px;
-	background-color: #eee;
+	padding-left: 15px;
+	padding-right: 15px;
+	overflow-y: hidden;
+	background-color: transparent;
+	display: flex;
+	flex-flow: column;
 	overflow-y: auto;
 }
-.player.me{
-	background-color: #3f51b5 !important;
-	width: 40px;
-	height: 40px;
-	line-height: 40px;
-}
-.message{
+.hall__room__inputMessage{
 	border-radius: 5px;
-	padding: 5px;
+}
+.inputText{
+    border-bottom: 1px solid #ffffff !important;
+    color: white;
+    font-size: 1rem;
+    font-weight: 400;
+}
+.inputText:focus{
+    border-bottom: 1px solid #ffffff !important;
+    box-shadow: 0 1px 0 0 #eaeaea !important;
+}
+.hall__room__messages::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+}
+
+.hall__room__messages__message{
 	background-color: white;
-	margin: 2px;
-	margin-bottom: 10px;
-}
-.message.me{
-	background-color: rgb(204, 201, 251);
-}
-.message__header{
-	font-size: 0.85rem;
-	display: flex;
-	flex-flow: row;
-}
-.message__header__time{
-	margin-left: 10px;
-}
-.message__text{
-	margin-top: 5px;
-}
-.inputText textarea{
-	border: solid 1px #03a9f4;
-	border-radius: 1px;
-	height: 60px;
-}
-.scene--hall .foot{
+	display: inline-block;
 	padding: 5px;
-	color: black;
+	padding-left: 10px;
+	padding-right: 10px;
+	position: relative;
+}
+.hall__room__messages__message.myself{
+	float: right;
+}
+.tri-right.border.left-top:before {
+	content: ' ';
+	position: absolute;
+	width: 0;
+	height: 0;
+  	left: -40px;
+	right: auto;
+  	top: -8px;
+	bottom: auto;
+	border: 20px solid;
+	border-color: #666 transparent transparent transparent;
+}
+.tri-right.left-top:after{
+	content: ' ';
+	position: absolute;
+	width: 0;
+	height: 0;
+  	left: -10px;
+	right: auto;
+  	top: 0px;
+	bottom: auto;
+	border: 10px solid;
+	border-color: lightyellow transparent transparent transparent;
+}
+.tri-right.border.right-top:before {
+	content: ' ';
+	position: absolute;
+	width: 0;
+	height: 0;
+  	left: auto;
+	right:-40px;
+  	top: -8px;
+	bottom: auto;
+	border: 20px solid;
+	border-color: #666 transparent transparent transparent;
+}
+.tri-right.right-top:after{
+	content: ' ';
+	position: absolute;
+	width: 0;
+	height: 0;
+  	left: auto;
+	right: -10px;
+  	top: 0px;
+	bottom: auto;
+	border: 10px solid;
+	border-color: lightyellow transparent transparent transparent;
+}
+
+.hall__room__buttons{
+	height: 3rem;
+	line-height: 3rem;
+	align-items: center;
+    justify-content: flex-end;
+}
+
+.hall__room__buttons__button{
+	color: white;
+    border: solid 1px white;
+	cursor: pointer;
 	text-align: center;
-	font-size: 1.1rem;
+	transition-duration: 0.3s;
+	border-radius: 5cm;
+}
+.hall__room__buttons__button:hover{
+	border: solid 1px var(--bg-hall-secondary-color);
+	background-color: white;
+	color: var(--bg-hall-secondary-color);
+}
+.playerDetails__wrapper{
+	padding: 10px;
+	width: 100%;
+	display: flex;
+	flex-flow: column;
+	height: 100%;
+	position: relative;
+}
+.playerDetails__name{
+	text-align: center;
+	font-size: 1.3rem;
+}
+.playerDeatails__info{
+	font-size: 1rem;
+}
+.playerDeatails__footer--wrapper{
+	display: flex;
+	flex-flow: column;
+	justify-content: flex-end;
+	height: 100%;
+}
+.playerDeatails__footer{
+}
+.playerDeatails__buttons__button{
+	background-color: white;
+	color: #313131;
+	font-size: 1rem;
+	font-weight: 400;
+	border: solid 1px white;
+	padding: 5px;
+	min-width: 75px;
+}
+.playerDeatails__buttons__button--close{
+	float: right;
+}
+.playerDeatails__buttons__button--close:active,
+.playerDeatails__buttons__button--close:hover, 
+.playerDeatails__buttons__button--close:focus{
+	border: solid 1px #ececec !important;
+	background-color: #ececec !important;
+}
+.playerDeatails__buttons__button--toBot{
+	background-color: white;
+	color: #03A9F4;
+    border: none;
+}
+.playerDeatails__buttons__button--toBot:hover{
+    background-color: #03A9F4;
+    color: white;
+}
+.playerDeatails__buttons__button--toBot:active,
+.playerDeatails__buttons__button--toBot:focus{
+	background-color: #03A9F4;
 }
