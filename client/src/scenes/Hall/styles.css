@@ -235,7 +235,7 @@
   	top: 0px;
 	bottom: auto;
 	border: 10px solid;
-	border-color: lightyellow transparent transparent transparent;
+	border-color: white transparent transparent transparent;
 }
 .tri-right.border.right-top:before {
 	content: ' ';
@@ -259,7 +259,7 @@
   	top: 0px;
 	bottom: auto;
 	border: 10px solid;
-	border-color: lightyellow transparent transparent transparent;
+	border-color: white transparent transparent transparent;
 }
 
 .hall__room__buttons{

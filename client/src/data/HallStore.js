@@ -2,7 +2,6 @@ import Immutable from 'immutable';
 import {ReduceStore} from 'flux/utils';
 import MenuActionTypes from './MenuActionTypes';
 
-
 class HallStore extends ReduceStore
 {
 	getInitialState(){
@@ -32,6 +31,11 @@ class HallStore extends ReduceStore
 					return state.update('players', a => a.concat(action.data));
 				return state;
 
+			case MenuActionTypes.HALL_EXIT_MEMBER:
+				return state
+				.update('players', a => a.filter(b => b.id !== action.data))
+				.update('[room, numberOfPlayers]', a => a-1);
+				
 			case MenuActionTypes.HALL_RECEIVE_NEW_MESSAGE:
 				return state.update('messages', a => a.push(action.data));
 	

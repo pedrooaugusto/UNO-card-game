@@ -1,12 +1,10 @@
 import MenuActionTypes from './MenuActionTypes';
 import AppDispatcher from './AppDispatcher';
 import Socket from './DefaultSocket';
-import RoomInfoModalStore from './RoomInfoModalStore';
 import History from './History';
 
-class RoomInfoModalStoreAction extends RoomInfoModalStore{
+class RoomInfoAction{
 	constructor(){
-		super(AppDispatcher);
 		Socket.getSocket().on("/home/load-room-info", (data) => {
 			AppDispatcher.dispatch({
 				type: MenuActionTypes.ROOM_INFO_MODAL_LOAD_DATA_COMPLETE,
@@ -23,7 +21,6 @@ class RoomInfoModalStoreAction extends RoomInfoModalStore{
 			AppDispatcher.dispatch({
 				type: MenuActionTypes.ROOM_INFO_MODAL_JOIN_ROOM_SUCCESSFULL
 			});
-			Socket.setRoom(data);
 			History.push(`/hall/${data}`);
 		});
 	}
@@ -32,10 +29,9 @@ class RoomInfoModalStoreAction extends RoomInfoModalStore{
 			type: MenuActionTypes.ROOM_INFO_MODAL_OPEN
 		});
 		AppDispatcher.dispatch({
-			type: MenuActionTypes.ROOM_INFO_MODAL_LOAD_DATA_START,
+			type: MenuActionTypes.ROOM_INFO_MODAL_LOAD_DATA,
 			data
 		});
-		Socket.getSocket().emit("/home/load-room-info", data.roomName);
 	}
 	close(){
 		AppDispatcher.dispatch({
@@ -45,16 +41,12 @@ class RoomInfoModalStoreAction extends RoomInfoModalStore{
 	join(data){
 		Socket.getSocket().emit("/home/join-room", data);
 	}
-	getProps(){
+	getActions(){
 		return {
-			room: 		 this.getState().get("room"),
-			isOpen:  	 this.getState().get("isOpen"),
-			status: 	 this.getState().get("status"),
-			message: 	 this.getState().get("message"),
 			join: 		 this.join,
 			onOpenRoom:  this.open,
 			onCloseRoom: this.close
 		}
 	}
 }
-export default new RoomInfoModalStoreAction();
+export default new RoomInfoAction();

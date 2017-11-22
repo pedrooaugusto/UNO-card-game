@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import ReactModal from 'react-modal';
-import Preloader from '../../../../components/Preloader';
 import PlayersList from './components/PlayersList';
 import SignForm from './components/SignForm';
 import './styles.css';
@@ -42,26 +41,6 @@ class RoomInfoModal extends Component {
         this.props.join(obj);
     }
     render(){
-        const content = ((props) => {
-            if(props.status === 'LOADING')
-                return (
-                    <Preloader 
-                        wrapperStyle = {modalStyle.preloaderWrapper}
-                        visible = {true} />
-                );
-            if(props.status === 'COMPLETE')
-                return (
-                    <div className="modal-content-wrapper">
-                        <PlayersList room = {props.room}/>
-                        <SignForm 
-                            handleSubmit = {this.handleSubmit} 
-                            roomName = {props.room.get("name")}
-                            message = {props.message}/>
-                    </div>
-                );
-            return <p>Ocorreu um erro :-(</p>;
-        })(this.props);
-        
         return (
             <ReactModal
                 isOpen={this.props.isOpen}
@@ -72,12 +51,18 @@ class RoomInfoModal extends Component {
                     <div className="container">
                         <div className="row">
                             <div className="col s12 modal__title">
-                                {this.props.room.get('name')}
+                                {this.props.displayedRoom.name}
                             </div>
                         </div>
                         <div className="row">
                             <div className="col s12">
-                                {content}
+                                <div className="modal-content-wrapper">
+                                    <PlayersList room = {this.props.displayedRoom}/>
+                                    <SignForm 
+                                        handleSubmit = {this.handleSubmit} 
+                                        roomName = {this.props.displayedRoom.name}
+                                        message = {this.props.message}/>
+                                </div>
                             </div>
                         </div>
                     </div>

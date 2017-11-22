@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const PlayersList = ({room}) => {
-    const playersLeft = room.get('capacity') - room.get('players').size;
-    const players = room.get("players").map((item, index) => {
-        return (<li key = {index}>{item.get("name") || item}</li>);
+    const playersLeft = room.capacity - room.players.length;
+    const players = room.players.map((item, index) => {
+        return (<li key = {index}>{item.name || item}</li>);
     });
     const text = playersLeft === 0 ? 
         "Esta sala esta cheia." : 
@@ -20,7 +20,7 @@ const PlayersList = ({room}) => {
             	<label className="info-label">
                     {text}
                  	<span className="right">
-                        {room.get('players').size}/{room.get('capacity')}
+                        {room.players.length}/{room.capacity}
                     </span>
                 </label>
             </div>

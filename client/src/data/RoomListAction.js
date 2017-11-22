@@ -1,23 +1,21 @@
 import MenuActionTypes from './MenuActionTypes';
 import AppDispatcher from './AppDispatcher';
 import Socket from './DefaultSocket';
-import RoomsListStore from './RoomsListStore';
 
-class RoomListStoreAction extends RoomsListStore{
+class RoomListAction{
 	constructor(){
-		super(AppDispatcher);
 		Socket.getSocket().on("/home/load-all-rooms", (data) => {
 			AppDispatcher.dispatch({
 				type: MenuActionTypes.ROOMS_LIST_LOAD_ALL_COMPLETE,
 				data
 			});
 		});
-		Socket.getSocket().on("/app/join/home/successs", (data) => {
-			Socket.setRoom(data);
+		Socket.getSocket().on("/app/join/home/success", (data) => {
+			console.log('Connected...');
 		});
 	}
 	init(){
-		Socket.getSocket().emit("/app/join/home");		
+		Socket.getSocket().emit("/app/join/home");
 	}
 	loadAll(){
 		AppDispatcher.dispatch({
@@ -37,15 +35,11 @@ class RoomListStoreAction extends RoomsListStore{
 			data
 		});
 	}
-	getProps(){
+	getActions(){
 		return{
-			rooms: 		this.getState().get("rooms"),
-			status: 	this.getState().get("status"),
 			loadAll: 	this.loadAll,
-			init: 		this.init,
-			addRoom:	this.addRoom,
-			deleteRoom: this.deleteRoom
+			init: 		this.init
 		}
 	}
 }
-export default new RoomListStoreAction();
+export default new RoomListAction();

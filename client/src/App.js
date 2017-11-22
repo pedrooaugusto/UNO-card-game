@@ -10,10 +10,14 @@ function AppView(props) {
 		<Router history = {History}>
 			<Switch>
 				<Route exact path="/">
-					<Menu history = {History} {...props} />
+					<Menu 
+						history = {History} 
+						{...props.menu} />
 				</Route>
 				<Route path="/hall/:name">
-					<Hall history = {History} {...props} />
+					<Hall 
+						history = {History} 
+						{...props.hall} />
 				</Route>
 				<Route path="/nopermission">
 					<Error 

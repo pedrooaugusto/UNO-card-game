@@ -2,7 +2,7 @@
 
 
 /* User collection */
-const users = [
+let users = [
     {
         id: "FDGUH8Y8yg7t7t67t7G76f7t7tGyf65r6yohit6u",
         name: "Pedro Augusto",
@@ -55,7 +55,7 @@ const users = [
 ];
 
 
-const rooms = [
+let rooms = [
     {
         name: "Nerd For Speed",
         status: "WAITING",
@@ -81,24 +81,60 @@ const rooms = [
 
 
 /* Creates a new in the database */
-exports.insertUser = function (user){
+const insertUser = function (user){
     users.push({
         id: user.id,
-        name: "",
-        room: user.room
+        name: user.name || "",
+        room: user.room,
+        connectedSince: user.connectedSince || 0,
+        isBot: user.isBot || false
     });
+    // console.log('\n\nInsert\n')
+    // for(let x of users)
+    //     console.log(x.id);
+}
+
+/* Remove user */
+const removeUser = function (idUser){
+    users = users.filter(a => a.id !== idUser);
+    //console.log('\n\nRemove\n');
+    /*for(let x of users)
+        console.log(x.id);*/
 }
 
 /* Creates a new home */
-exports.insertRoom = function (room, admin){
+const insertRoom = function (room, admin){
     rooms.push({
         name: room.name,
         status: "WAITING",
         capacity: room.capacity,
-        numberOfPlayers: 1,
+        numberOfPlayers: 0,
         admin
     });
 }
+const removeRoom = function (nameRoom){
+    rooms = rooms.filter(a => a.name !== nameRoom);
+}
+const findUser = function (cond){
+    return users.find(cond);
+}
+const findRoom = function (cond){
+    return rooms.find(cond);
+}
+const filterUser = function (cond){
+    return users.filter(cond);
+}
+const getRooms = () => rooms;
 
-exports.users = users;
-exports.rooms = rooms;
+module.exports = {
+    insertRoom,
+    removeRoom,
+    removeUser,
+    insertUser,
+    findUser,
+    findRoom,
+    filterUser,
+    getRooms,
+    users,
+    rooms
+}

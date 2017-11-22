@@ -1,16 +1,27 @@
 To do list:
 
---enviar menssagens no chat na hall
---dizer como as coisas funcionam para o novo usuário na hall
---transformar espaços vazios da hall em bot
---um texto explicando melhor sobre espaços vazios na hall 
---destranformar espaço vazio, da hall, de bot
+--iniciar o game assim que o número de jogadores for atingido
 --reformular tamnhos e disposição de items da tela hall no celular (de vdd)
---atualizar hall quando alguém da sala (número de jogadores)
---tratar quando a sala fica com zero usuários
---adicionar algum evento para sair propriamente do hall
---mudar o status da sala quando lotar
---refatorar PlayerInfoModal
---tamanho do modal de entrar na sala no mobile
 --fazer a tela de Game
 --deixar a tela Home mais amigável
+--remove  load all in every change
+--properly name bots
+
+Doing List:
+
+
+Done list:
+
+--transformar espaços vazios da hall em bot
+--destranformar espaço vazio, da hall, de bot
+--refatorar servidor
+--usar banco de dados
+--tratar quando a sala fica com zero usuários
+--dizer como as coisas funcionam para o novo usuário na hall
+--um texto explicando melhor sobre espaços vazios na hall 
+--refatorar PlayerInfoModal
+--enviar menssagens no chat na hall
+--adicionar algum evento para sair propriamente do hall
+--desconectar da sala properly
+--mudar o status da sala quando lotar
+--atualizar hall quando alguém sair da sala (número de jogadores)

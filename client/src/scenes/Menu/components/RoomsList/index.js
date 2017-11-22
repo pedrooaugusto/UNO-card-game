@@ -27,11 +27,9 @@ class RoomsList extends React.Component
     }
     render()
     {
-        const content = (() => (
-            this.props.status === 'LOADING' ? 
+        const content = this.props.status === 'LOADING' ? 
                 <Preloader visible = {true} wrapperStyle = {wrapperStyle}/> :
-                <List rooms = {this.props.rooms} showRoomInfo = {this.showRoomInfo}/>)
-        )();
+                <List rooms = {this.props.rooms} showRoomInfo = {this.showRoomInfo}/>;
         return (
             <div className="card content z-depth-4">
                 <h5>Selecione uma sala</h5>

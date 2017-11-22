@@ -1,33 +1,35 @@
 import App from '../App';
 import {Container} from 'flux/utils';
-import CreateRoomStoreAction from '../data/CreateRoomStoreAction';
-import RoomListStoreAction from '../data/RoomListStoreAction';
-import RoomInfoModalStoreAction from '../data/RoomInfoModalStoreAction';
-import HallStoreAction from '../data/HallStoreAction';
-import HallPlayerInfoStoreAction from '../data/HallPlayerInfoStoreAction';
+import CommonMenuStore from '../data/CommonMenuStore';
+import RoomListAction from '../data/RoomListAction';
+import RoomInfoAction from '../data/RoomInfoAction';
+import CreateRoomAction from '../data/CreateRoomAction';
+import CommonHallStore from '../data/CommonHallStore';
+import HallAction from '../data/HallAction';
 import socket from '../data/DefaultSocket';
 
 function getStores () 
 {
 	return [
-		RoomListStoreAction,
-		RoomInfoModalStoreAction,
-		CreateRoomStoreAction,
-		HallStoreAction,
-		HallPlayerInfoStoreAction
+		CommonMenuStore,
+		CommonHallStore
 	];
 }
 function getState () 
 {
 	return {
-		roomsList: RoomListStoreAction.getProps(),
-		roomInfo: RoomInfoModalStoreAction.getProps(),
-		createRoom: CreateRoomStoreAction.getProps(),
-		
-		playerInfo: HallPlayerInfoStoreAction.getProps(),
-		hall: 		HallStoreAction.getProps(),
-		
-		socketID:   socket.getSocket().id//"FDGUH8Y8yg7t7t67t7G76f7t7tGyf65r6yohit6u"
+		menu:{
+			state: CommonMenuStore.getState(),
+			roomList: RoomListAction.getActions(),
+			roomInfo: RoomInfoAction.getActions(),
+			createRoom: CreateRoomAction.getActions(),
+			socketID:   socket.getSocket().id
+		},
+		hall:{
+			state: CommonHallStore.getState(),
+			...HallAction.getActions(),
+			socketID: socket.getSocket().id
+		}
 	};
 }
 export default Container.createFunctional(App, getStores, getState);

@@ -18,12 +18,12 @@ const DivPlayer = ({myself, name, freeSpot, openModal}) => {
 const PlayersList = (props) => {
 	const p = [];
 	for(let i = 0; i < props.capacity; i++){
-		if(props.players[i])
+		if(props.players.get(i))
 			p.push(
 				<DivPlayer
 					key = {i}
-					name = {props.players[i].name}
-					myself = {props.socketID === props.players[i].id}
+					name = {props.players.get(i).get('name')}
+					myself = {props.socketID === props.players.get(i).get('socketId')}
 					freeSpot = {false}
 					openModal = {props.onModalOpen}/>
 			);
@@ -41,23 +41,6 @@ const PlayersList = (props) => {
 		<div className="hall__room__players">
 			<div className="hall__room__players__list">
 				{p}
-				{/*<div 
-					className="hall__room__players__list__player myself"
-					onClick={props.onModalOpen}>
-					P
-				</div>
-				<div className="hall__room__players__list__player">
-					F
-				</div>
-				<div className="hall__room__players__list__player">
-					A
-				</div>
-				<div className="hall__room__players__list__player">
-					M
-				</div>
-				<div className="hall__room__players__list__player">
-					...
-				</div>*/}
 			</div>
 		</div>
 	);

@@ -7,8 +7,8 @@ const DivMessage = ({myself, text, from}) => {
 	return (
 		<div className="hall__room__messages__message--wrapper">
 			<div className={classe}>
-				<div className="hall__room__messages__message__from">{from}</div>
-				<div className="hall__room__messages__message__message">{text}</div>
+				<div className="hall__room__messages__message__from">~{from}</div>
+				<div className="hall__room__messages__message__message">{text.split('\n').map((a, i) => (<div key={i}>{a}</div>))}</div>
 			</div>
 		</div>	
 	);

@@ -12,6 +12,7 @@
     "ejs": "latest",
     "express": "latest",
     "express-session": "latest",
+    "mongoose": "^4.13.4",
     "socket.io": "^2.0.3"
   },
   "scripts": {

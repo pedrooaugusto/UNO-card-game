@@ -6,100 +6,136 @@
 	access the application.
 */
 const database = require("./database");
-
-module.exports = function(socket){
-
-    /* When disconnectingo from the room */
-    socket.on("disconnect", () => {
-        console.log(`User ${socket.id} disconnected`);
-        const user = database.users.find(a => a.id === socket.id);
-        if(user && user.room && user.room !== "home"){
-            database.rooms.find(a => a.name === user.room).numberOfPlayers -= 1;
-            socket.broadcast.to(user.room).emit("/hall/new-message", {
-                from: {id: "THE DOCTOR", name: "SYSTEM"},
-                time: new Date().toLocaleString("bali"),
-                text: `${user.name} saiu da sala.`
-            });
-            user.room = "ghost"; // \_(O.O)_/ idk...
-            socket.broadcast.to("home").emit("/home/load-all-rooms", database.rooms);
-        }
-    });
-	/* Joining to the home room */
-	socket.on("/app/join/home", data => {
-        console.log(`User ${socket.id} connected`);
-        database.insertUser({
-        	id: socket.id,
-        	room: "home"
-       	});
-        socket.join("home");
-        socket.emit("/app/join/home/success", "home");
-    });
+const {Room} = require("./DatabaseConnection");
 
 
-    /* Request all rooms created */
-    socket.on("/home/load-all-rooms", data => {
-        socket.emit("/home/load-all-rooms", database.rooms);
-    });
-
-    
-    /* Request info of a room */
-    socket.on("/home/load-room-info", data => {
-        const room = database.rooms.find(a => a.name === data);
-        const players = database.users.filter(a => a.room === data);
-        socket.emit("/home/load-room-info", {room, players});
-    });
-
-
-    /* Attempet to create a new room */
-    socket.on("/home/create-room", data => {
-        if(database.rooms.find(a => a.name === data.name))
+/* Trigger in hard and final disconnect aka close webpage */
+module.exports.disconnect = function (socket) {
+    socket.on("disconnect", async data => {
+        console.log(`\nPlayer ${socket.id} has been disconnected\n`);
+        try
         {
-            socket.emit("/home/create-room/fail", {
-                created: false,
-                message: `Falha ao criar sala, este nome já se encontra em uso.`
-            });
-        }
-        else
-        {
-        	database.insertRoom(data, socket.id);
-            
-            const player = database.users.find(a => a.id === socket.id);
-            socket.leave("home");
-            player.room = data.name;
-            player.name = data.nickName;
-            player.connectedSince = new Date().getTime();
-            socket.broadcast.to("home").emit("/home/load-all-rooms", database.rooms);
-            socket.emit("/home/create-room/success", {
-                created: true,
-                message: 'Sala criada com sucesso!',
-                roomName: data.name
-            });
+            const room = await Room.findOne({players: {$elemMatch: {socketId: socket.id}}});
+            if(room)
+            {
+                const player = room.players.find(r => r.socketId === socket.id);
+                player.remove();
+                if(room.players.length === 0)
+                    await room.remove();
+                else
+                    await room.save();
+                
+                socket.broadcast.to(room.name).emit("/hall/exit-member", {
+                    message: {
+                        from: {id: "THE DOCTOR", name: "SYSTEM"},
+                        text: `${player.name} saiu da sala.`
+                    },
+                    playerId: player.socketId
+                });
+                
+                socket.leave(room.name);
+                socket.broadcast.to("__HOME").emit("/home/load-all-rooms", await Room.find({}));
+            }
+        }catch(err){
+            console.log(err);  
         }
     });
+}
 
 
-    /* Attempt to joining a room */
-    socket.on("/home/join-room", data => {
-	    const room = database.rooms.find(a => a.name === data.room);
+/* Trigger in init home scene */
+module.exports.joinHome = function (socket) {
+    socket.on("/app/join/home", data => {
+        console.log(`\nUser ${socket.id} has been connected to the __HOME\n`);
+        socket.join("__HOME");
+        socket.emit("/app/join/home/success", "__HOME");
+    });
+}
 
-	    if(room.status === "IN GAME")
-	        return socket.emit("/home/join-room/fail", "Sala esta esta lotada!");
 
-	    const exist = database.users.find(a => a.room === room.name && a.name === data.nickName)
-	    if(exist !== undefined)
-	    	return socket.emit("/home/join-room/fail", "Este nickname já existe");
-	    const player = database.users.find(a => a.id === socket.id);
-	    if(player)
+/* Request a list of all rooms created */
+module.exports.loadAllRooms = function (socket) {
+    socket.on("/home/load-all-rooms", async data => {
+        try
         {
-            socket.leave("home");
-    	    player.room = room.name;
-    	    player.name = data.nickName;
-            player.connectedSince = new Date().getTime();
-    	    socket.emit("/hall/join-room/successful", room.name);
+            socket.emit("/home/load-all-rooms", await Room.find({}));
+        }catch(err){
+            console.log(err);
         }
-        else
+    });
+}
+
+
+/* Attemps to create a new room */
+module.exports.createRoom = function (socket) {
+    socket.on("/home/create-room", async data => {
+        try
         {
-            socket.emit("/home/join-room/fail", "Something went wrong!");
+            if((await Room.findOne({name: data.name})))
+            {
+                socket.emit("/home/create-room/fail", {
+                    created: false,
+                    message: `Falha ao criar sala, este nome já se encontra em uso.`
+                });
+            }
+            else
+            {
+                const player = {
+                    socketId: socket.id,
+                    name: data.nickName,
+                    connectedSince: new Date().getTime(),
+                    roomName: data.name,
+                    isBot: false
+                };
+                const room = new Room({
+                    name: data.name,
+                    status: "WAITING",
+                    capacity: data.capacity,
+                    playerTurn: 0,
+                    admin: player,
+                    cards: [],
+                    players: [player]
+                });
+                await room.save();
+                socket.leave("__HOME");
+                socket.broadcast.to("__HOME").emit("/home/load-all-rooms", await Room.find({}));
+                socket.emit("/home/create-room/success", {
+                    created: true,
+                    message: 'Sala criada com sucesso!',
+                    roomName: data.name
+                });
+            }
+        }catch(err){
+            console.log(err);
         }
-	});
-};
+    });
+}
+
+
+/* Attemps to join in a room */
+module.exports.joinRoom = function (socket) {
+    socket.on("/home/join-room", async data => {
+        try
+        {
+            const room = await Room.findOne({name: data.room});
+
+            if(room.status === "IN GAME")
+                return socket.emit("/home/join-room/fail", "Sala esta esta lotada!");
+            if(room.players.find(p => p.name === data.nickName))
+                return socket.emit("/home/join-room/fail", "Este nickname já existe");
+            const player = {
+                socketId: socket.id,
+                name: data.nickName,
+                connectedSince: new Date().getTime(),
+                roomName: room.name,
+                isBot: false
+            };
+            socket.leave("__HOME");
+            room.players.push(player);
+            await room.save();
+            socket.emit("/hall/join-room/successful", room.name);
+        }catch(err){
+            console.log(err);
+        }
+    });
+}

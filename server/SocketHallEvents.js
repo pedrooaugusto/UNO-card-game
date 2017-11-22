@@ -6,64 +6,184 @@
     players join to the room 
     to start the game
 */
-const database = require("./database");
+const Messages = require("./Messages");
+const {Room} = require("./DatabaseConnection");
+const BOT_NAMES = ["Zed Bot", 
+    "Trickster Bot", "Annie Bot", 
+    "Caitlyn Bot", "Quinn Bot", "Jinx Bot"]; 
 
-module.exports = function(socket){
-    
-    /* Check if a player can join to the room */
-    socket.on("/hall/join-room/check", data => {
-        
-        const room = database.rooms.find(a => a.name === data.room);
-        if(room === undefined)
-            return socket.emit("/hall/join-room/check/fail", 
-                "Esta sala não existe.");
+/* Check if a player can join to the room */
+module.exports.joinRoomCheck = function(socket) {
+    socket.on("/hall/join-room/check", async data => {
+        try
+        {
+            const room = await Room.findOne({name: data.room});
+            if(room === undefined || room === null)
+                return socket.emit("/hall/join-room/check/fail", 
+                    "Esta sala não existe.");
 
-        const player = database.users.find(a => a.id === socket.id && a.room === data.room);
-        if(player === undefined)
-            return socket.emit("/hall/join-room/check/fail", 
-                "Você não tem permissão para acessar esta sala.");
-        
-        if(room.status === "IN GAME")
-            return socket.emit("/hall/join-room/check/fail", 
-                "Esta sala esta lotada :(");
-        
-        socket.join(room.name);
-        room.numberOfPlayers += 1;
-        if(database.users.filter(a => a.room === room.name).length === room.capcity)
-            room.status = "IN GAME";
+            const player = room.players.find(a => a.socketId === socket.id);
+            if(player === undefined || player === undefined)
+                return socket.emit("/hall/join-room/check/fail", 
+                    "Você não tem permissão para acessar esta sala.");
+            
+            if(room.status === "IN GAME")
+                return socket.emit("/hall/join-room/check/fail", 
+                    "Esta sala esta lotada :(");
+            
+            socket.join(room.name);
 
-        socket.emit("/hall/join-room/check/successful", {
-            room,
-            players: database.users.filter(a => a.room === room.name)
-        });
-        socket.nsp.to(room.name).emit("/hall/welcome-message", {
-            player,
-            message:{
-                from: {id: "THE DOCTOR", name: "SYSTEM"},
-                time: new Date().toLocaleString("bali"),
-                text: `${player.name} entrou na sala.`
+            if(room.players.length === room.capcity){
+                room.status = "IN GAME";
+                await room.save();
             }
-        });
-        socket.broadcast.to("home").emit("/home/load-all-rooms", database.rooms);
-    });
 
-
-    /* Sending a message to all people in the chat room */
-    socket.on("/hall/new-message", data => {
-        data.from.name = database.users.find(a => a.id === socket.id).name;
-        socket.nsp.to(data.room).emit("/hall/new-message", data);
-    });
-
-    /* Sending info a about the player */
-    socket.on("/hall/load-info-player", data => {
-        const room = Object.values(socket.rooms)[1];
-        const p = database.users.find(a => a.name === data);
-        if(p)
-            return socket.nsp.to(room).emit("/hall/load-info-player-success", {
-                player: p, message: "Ok"
+            socket.emit("/hall/join-room/check/successful", {
+                room
             });
-        return socket.nsp.to(room).emit("/hall/load-info-player-fail", {
-            player: undefined, message: "Ocorreu um erro..."
-        });
+
+            socket.nsp.to(room.name).emit("/hall/new-member", {
+                player,
+                message: Messages.NewPlayer(
+                    player.name, 
+                    room.capacity - room.players.length
+                )
+            });
+
+            socket.emit("/hall/welcome-message", {
+                message: Messages.Welcome(
+                    player.name, 
+                    room.name, 
+                    room.admin.name,
+                    room.capacity,
+                    room.players.length
+                )
+            });
+            socket.broadcast.to("__HOME").emit("/home/load-all-rooms", await Room.find({}));
+        }catch(err){
+            console.log(err);
+        }
     });
-};
+}
+
+
+/* Sending a message to all people in the chat room */
+module.exports.newMessage = function(socket) {
+    socket.on("/hall/new-message", async data => {
+        try
+        {
+            const roomName = Object.values(socket.rooms)[1];
+            const room = await Room.findOne({name: roomName});
+            data.from.name = room.players.find(a => a.socketId === socket.id).name;
+            socket.nsp.to(data.room).emit("/hall/new-message", data);
+        }catch(err){
+            console.log(err);
+        }
+    });
+}
+
+
+/* Disconnect from hall */
+module.exports.exit = function(socket) {
+    socket.on("/hall/exit", async data => {
+        try
+        {
+            const roomName = Object.values(socket.rooms)[1];
+            if(roomName)
+            {
+                console.log("\n\nUser disconnected from: "+roomName);
+                const room = await Room.findOne({name: roomName});
+                const player = room.players.find(a => a.socketId === socket.id);
+                player.remove();
+                if(room.players.length === 0) 
+                   await room.remove();
+                else
+                    await room.save();
+                socket.broadcast.to(roomName).emit("/hall/exit-member", {
+                    message: {
+                        from: {id: "THE DOCTOR", name: "SYSTEM"},
+                        text: `${player.name} saiu da sala.`
+                    },
+                    playerId: player.socketId
+                });
+                socket.leave(roomName);
+
+                if(!data)
+                    socket.emit("/hall/exit");
+                socket.broadcast.to("__HOME").emit("/home/load-all-rooms", await Room.find({}));
+            }
+        }catch(err){
+            console.log(err);
+        }
+    });
+}
+
+
+/* Add bot */
+module.exports.addBot = function(socket) {
+    socket.on("/hall/add-bot", async data => {
+        try
+        {
+            console.log(JSON.stringify(socket.rooms));
+            const roomName = Object.values(socket.rooms)[1];
+            const room = await Room.findOne({name: roomName});
+            if(room)
+            {
+                const n = room.players.filter(a => a.isBot).length + 1;
+                const newBot = {
+                    socketId: "bot-"+n,
+                    name: BOT_NAMES[n - 1],
+                    connectedSince: new Date().getTime(),
+                    roomName: room.name,
+                    isBot: true
+                };
+                room.players.push(newBot);
+                await room.save();
+                socket.nsp.to(room.name).emit("/hall/new-member", {
+                    player: newBot,
+                    message: Messages.NewBot(newBot.name, room.capacity - room.players.length)
+                });
+                socket.emit("/hall/add-bot-success", {});
+                socket.broadcast.to("__HOME").emit("/home/load-all-rooms", await Room.find({}));
+            }
+            else
+            {
+                socket.emit("/hall/add-bot-fail", {
+                    player: undefined, message: "Something went wrong!"
+                });
+            }
+        }catch(err){
+            console.log(err);
+        }
+    });
+}
+
+
+/* Remove bot */
+module.exports.removeBot = function(socket) {
+    socket.on("/hall/remove-bot", async data => {
+        try
+        {
+            const roomName = Object.values(socket.rooms)[1];
+            if(roomName)
+            {
+                console.log("\n\nBot has been disconnected from: "+roomName);
+                const room = await Room.findOne({name: roomName});
+                const player = room.players.find(a => a.isBot && a.name === data);
+                player.remove();
+                await room.save();
+                socket.nsp.to(roomName).emit("/hall/exit-member", {
+                    message: {
+                        from: {id: "THE DOCTOR", name: "SYSTEM"},
+                        text: `${room.admin.name} removeu o bot ${player.name} da sala.`
+                    },
+                    playerId: player.socketId
+                });
+                socket.emit("/hall/remove-bot-success", {});
+                socket.broadcast.to("__HOME").emit("/home/load-all-rooms", await Room.find({}));
+            }
+        }catch(err){
+            console.log(err);
+        }
+    });
+}

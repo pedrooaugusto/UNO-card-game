@@ -7,7 +7,6 @@ const app = express();
 const http = require("http").Server(app);
 const io = require("socket.io")(http).of("/app");
 
-
 app.set("port", (process.env.PORT || 3001));
 app.set("view engine", "ejs");
 
@@ -24,12 +23,22 @@ app.use(session({
 
 app.use(express.static(__dirname + "/public"));
 
+app.use("*", express.static(__dirname + "/public/index.html"));
+
 io.on("connection", function(socket){
-    /*
-        WE HAVE TO THREAT WHEN USER DISCONNECT
-    */
-    HomeEvents(socket);
-    HallEvents(socket);
+    console.log(`\nPlayer ${socket.id} has been connected\n`);
+
+    HomeEvents.disconnect(socket);
+    HomeEvents.joinHome(socket);
+    HomeEvents.loadAllRooms(socket);
+    HomeEvents.createRoom(socket);
+    HomeEvents.joinRoom(socket);
+    
+    HallEvents.joinRoomCheck(socket);
+    HallEvents.newMessage(socket);
+    HallEvents.exit(socket);
+    HallEvents.addBot(socket);
+    HallEvents.removeBot(socket);
 });
 
 http.listen(app.get("port"), function () {
