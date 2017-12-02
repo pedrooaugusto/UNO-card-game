@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Uno Game - Mr. Blue Sky</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+		<link rel="stylesheet" type="text/css" href="./styles.css">
+	</head>
+	<body>
+		<div class = "container">
+			<div class = "game__wrapper">
+				<div class = "game__section room__name">
+					<div class ="name">Nerd For Speed</div>
+				</div>
+				<div class = "game__section room__players">
+					<div>
+						<div class = "player active">P</div>
+						<div class = "player__stats positive">+2</div>
+					</div>
+					<div>
+						<div class = "player">M</div>
+						<div class = "player__stats negative">-1</div>
+					</div>
+					<div class = "player">M</div>
+					<div class = "player">F</div>
+					<div class = "player">A</div>
+				</div>
+				<div class = "game__section room__message">
+					<!-- 
+						You have 30s to make your move
+						Pedro Augusto have 30s to make his move
+						---
+						You have 30s to buy n cards
+						Pedro Augusto have 30s to buy n cards
+						---
+						"UNO" by Mr. Blue Sky 
+					-->
+					<div class ="message">You have 30s to make your move</div>
+				</div>
+				<div class = "game__section room__cards">
+					<div class = "game__throw__cards">
+					</div>
+				</div>
+				<div class = "game__section room__actions">
+					<div class = "game__menu">
+						<div class = "button chat">Chat</div>
+						<div class = "button">Buy</div>
+						<div class = "button">Help</div>
+						<div class = "button uno">UNO!</div>
+						<div class = "button sendAll" style="display: none;">Send All</div>
+					</div>
+				</div>
+				<div class = "game__section room__yourCards">
+					<div class = "game__yourCards">
+						<div class = "card" data-selected = "false"></div>
+						<div class = "card" data-selected = "false"></div>
+						<div class = "card" data-selected = "false"></div>
+						<div class = "card" data-selected = "false"></div>
+						<div class = "card" data-selected = "false"></div>
+						<div class = "card" data-selected = "false"></div>
+						<div class = "card" data-selected = "false"></div>
+						<div class = "card" data-selected = "false"></div>
+						<div class = "card" data-selected = "false"></div>
+						<div class = "card" data-selected = "false"></div>
+						<div class = "card" data-selected = "false"></div>
+						<div class = "card" data-selected = "false"></div>					
+					</div>
+				</div>
+			</div>
+			<div class = "chat-modal">
+				<div class = "body">
+					<div class = "sec title">
+						<div class = "text">
+							Nerd For Speed
+						</div>
+						<div class = "close">
+							x
+						</div>
+					</div>
+					<div class = "sec messages">
+						
+					</div>
+					<div class = "sec input">
+					<input type="text" name="">
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		onload = function (){
+			document.querySelector(".chat-modal .body .title .close").addEventListener("click", function(){
+				document.querySelector(".chat-modal").style.display = "none";
+			});
+			document.querySelector(".button.chat").addEventListener("click", function(){
+				document.querySelector(".chat-modal").style.display = "block";
+			});
+			document.querySelectorAll(`.game__yourCards .card`).forEach(function (a, b) {
+				let time = -1;
+				a.addEventListener('click', function (c) {
+					if(time === -1)
+					{
+						time = setTimeout(() => {
+							this.style.display = "none";
+							this.setAttribute("data-selected", false);
+							const rotate = ((c) => c % 2 === 0 ? c : -c)(Math.floor(Math.random()*6));
+							if(rotate % 2 === 0)
+								document.querySelector(".game__throw__cards").insertAdjacentHTML("beforeend","<div class='card-wrapper f'><div class = 'card' style = 'transform: rotate("+rotate+"deg);'></div></div>");
+							else
+								document.querySelector(".game__throw__cards").insertAdjacentHTML("beforeend","<div class='card-wrapper e'><div class = 'card' style = 'transform: rotate("+rotate+"deg);'></div></div>");
+							if(document.querySelectorAll("[data-selected=true]").length === 0)
+								document.querySelector(".button.sendAll").style.display = "none";
+						}, 200);
+					}
+					else if(time !== -1 && this.dataset.selected === "false")
+					{
+						clearTimeout(time);
+						this.style.transform = "scale(0.8)";
+						this.setAttribute("data-selected", true);
+						if(document.querySelectorAll("[data-selected=true]").length === 1)
+							document.querySelector(".button.sendAll").style.display = "block";
+						time = -1;
+					}
+					else if(this.dataset.selected === "true")
+					{
+						clearTimeout(time);
+						this.style.transform = "scale(1)";
+						this.setAttribute("data-selected", false);
+						console.log(document.querySelectorAll("[data-selected=true]"));
+						if(document.querySelectorAll("[data-selected=true]").length === 0)
+							document.querySelector(".button.sendAll").style.display = "none";
+						time = -1;
+					}
+				});
+			});
+		};
+	</script>
+</html>

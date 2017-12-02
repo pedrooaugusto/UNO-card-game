@@ -27,16 +27,11 @@ module.exports.joinRoomCheck = function(socket) {
                 return socket.emit("/hall/join-room/check/fail", 
                     "Você não tem permissão para acessar esta sala.");
             
-            if(room.status === "IN GAME")
+            if(room.players.length - 1 === room.capacity)
                 return socket.emit("/hall/join-room/check/fail", 
                     "Esta sala esta lotada :(");
             
             socket.join(room.name);
-
-            if(room.players.length === room.capcity){
-                room.status = "IN GAME";
-                await room.save();
-            }
 
             socket.emit("/hall/join-room/check/successful", {
                 room
@@ -44,6 +39,7 @@ module.exports.joinRoomCheck = function(socket) {
 
             socket.nsp.to(room.name).emit("/hall/new-member", {
                 player,
+                full: room.players.length >= room.capacity,
                 message: Messages.NewPlayer(
                     player.name, 
                     room.capacity - room.players.length
@@ -124,23 +120,30 @@ module.exports.addBot = function(socket) {
     socket.on("/hall/add-bot", async data => {
         try
         {
-            console.log(JSON.stringify(socket.rooms));
             const roomName = Object.values(socket.rooms)[1];
             const room = await Room.findOne({name: roomName});
             if(room)
             {
-                const n = room.players.filter(a => a.isBot).length + 1;
+                const bots = room.players.filter(a => a.isBot);
+                const avaliableNames = BOT_NAMES.map((value, index) => {
+                    if(!bots.find(a => a.name === value))
+                        return {value, index};
+                }).filter(a => a).shift();
+                console.log(avaliableNames);
                 const newBot = {
-                    socketId: "bot-"+n,
-                    name: BOT_NAMES[n - 1],
+                    socketId: "bot-"+avaliableNames.index+1,
+                    name: avaliableNames.value,
                     connectedSince: new Date().getTime(),
                     roomName: room.name,
                     isBot: true
                 };
                 room.players.push(newBot);
+                if(room.players.length === room.capcity)
+                    room.status = "IN GAME";
                 await room.save();
                 socket.nsp.to(room.name).emit("/hall/new-member", {
                     player: newBot,
+                    full: room.players.length >= room.capacity,
                     message: Messages.NewBot(newBot.name, room.capacity - room.players.length)
                 });
                 socket.emit("/hall/add-bot-success", {});

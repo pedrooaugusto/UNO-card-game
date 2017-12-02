@@ -1,12 +1,15 @@
 
 import React, { Component } from 'react';
-import Title from './components/Title';
+import Title from './components/Title/';
 import RoomsList from './components/RoomsList';
 import RoomInfoModal from './components/RoomInfoModal';
 import CreateRoomModal from './components/CreateRoomModal';
 import './styles.css';
 
 class Menu extends Component {
+	componentDidMount() {
+		document.title = "Uno - Choose Room";
+	}
 	render(){
 		return (
 			<div className="scene--menu">

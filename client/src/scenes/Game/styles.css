@@ -1,0 +1,391 @@
+
+@media only screen and (max-width: 600px){
+	.game__wrapper{
+		width: 100%;
+	}
+	.game__section.room__players div.player{
+		font-size: 1.3rem;
+		width: 35px;
+		height: 35px;
+	}
+	.game__section.room__players div.player.active{
+		width: 40px;
+		height: 40px;
+	}
+	.game__section.room__message div.message{
+		font-size: 1rem;
+	}
+	.room__cards{
+		height: 25%;
+	}
+	.game__throw__cards div.card_{
+		background-size: calc(2048*0.3px);
+	}
+	.game__throw__cards div.card_-wrapper{
+		height: calc(298*0.3px);
+		width: calc(209.8*0.3px);
+		left: calc(50% - 209.8*0.15px);
+		top: calc(50% - 298*0.15px);
+	}
+	.game__menu .button{
+		padding: 3px;
+		min-width: 45px;
+		margin-right: 5px;
+	}
+	.game__section.room__yourCards .card_{
+		height: calc(298*0.3px);
+		width: calc(209.8*0.3px);
+		margin-right: 3px;
+		margin-left: 3px;
+		background-size: calc(2048*0.3px);
+	}
+	.scene--game__room__chat{
+		min-width: 90%;
+		max-width: 90%;
+	    top: 50%;
+	   	min-height: 90vh;
+	    height: 90vh;
+	    left: 50%;
+	    margin-right: -50%;
+	    transform: translate(-50%, -50%);
+	}
+	.chat__room .messages{
+		max-height: 45vh;
+	}
+	.chat__room .header{
+		margin-top: 15px;
+	}
+}
+@media only screen and (min-width: 601px){
+	.game__wrapper{
+		width: 50%;
+	}
+	.game__section.room__players div.player{
+		font-size: 1.5rem;
+		width: 45px;
+		height: 45px;
+	}
+	.game__section.room__players div.player.active{
+		width: 50px;
+		height: 50px;
+	}
+	.game__section.room__message div.message{
+		font-size: 1.1rem;
+	}
+	.room__cards{
+		height: 30%;
+	}
+	.game__throw__cards div.card_{
+		background-size: calc(2048*0.4px);
+	}
+	.game__throw__cards div.card_-wrapper{
+		height: calc(298*0.4px);
+		width: calc(209.8*0.4px);
+		left: calc(50% - 209.8*0.2px);
+		top: calc(50% - 298*0.2px);
+	}
+	.game__menu .button{
+		padding: 5px;
+		min-width: 50px;
+		margin-right: 5px;
+	}
+	.game__section.room__yourCards .card_{
+		height: calc(298*0.4px);
+		width: calc(209.8*0.4px);
+		margin-right: 5px;
+		margin-left: 5px;
+		background-size: calc(2048*0.4px);
+	}
+	.scene--game__room__chat{
+		min-width: 35%;
+		max-width: 35%;
+	    top: 40%;
+	    min-height: 40%;
+	    height: 60%;
+	    left: 50%;
+	    margin-right: -50%;
+	    transform: translate(-50%, -50%);
+	}
+	.chat__room .messages{
+		max-height: 40vh;
+	}
+	.chat__room .header{
+		margin-top: 0px;
+	}
+}
+body{
+	margin: 0px;
+}
+.container__{
+	background-color: #00bcd4;
+	position: absolute;
+	display: flex;
+	justify-content: center;
+	min-height: fit-content;
+	height: 100vh;
+	width: 100%;
+}
+.game__wrapper{
+	display: flex;
+	flex-flow: column;
+	border-left: solid 1px white;
+	border-right: solid 1px white;
+	min-height: fit-content;
+	height: 100vh;
+}
+.game__section{
+	padding: 5px;
+	width: calc(100% - 10px);
+	margin-top: 15px;
+	position: relative;
+}
+.game__section.room__name div.name{
+	font-size: 2.5rem;
+	color: white;
+	text-align: center;
+	font-weight: bold;
+}
+.game__section.room__players{
+	min-height: fit-content;
+	display: flex;
+	justify-content: center;
+}
+
+.game__section.room__players div.player{
+	background-color: white;
+	color: #00bcd4;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 5cm;
+	text-align: center;
+	font-weight: bold;
+	margin-right: 5px;
+	margin-right: 5px;
+	transition-duration: 0.3s;
+}
+.game__section.room__players div.player.active{
+	color: black;
+	border: solid 2px black;
+}
+.game__section.room__players div.player__stats{
+	position: absolute;
+	margin-top: 5px;
+	margin-left: 10px;
+	font-weight: bolder;
+	font-size: 1.5rem;
+	transition-duration: 2s;
+	animation-name: stats;
+	animation-duration: 2s;
+	opacity: 0;
+	animation-timing-function: ease;
+	top: 100%;
+}
+.game__section.room__players div.player__stats.negative{
+	color: red;
+}
+.game__section.room__players div.player__stats.positive{
+	color: green;
+}
+@keyframes stats{
+	from{
+		opacity: 1;
+		top: 100%;
+	}
+	to{
+		top: 20%;
+		opacity: 0;
+	}
+}
+.game__section.room__message{
+	min-height: fit-content;
+	margin-top: 20px;
+}
+.game__section.room__message div.message{
+	text-align: center;
+	color: #0c0c0c;
+	letter-spacing: 0.05em;
+}
+
+.game__throw__cards{
+	min-height: fit-content;
+	display: flex;
+	position: relative;
+	height: 100%;
+	width: 100%;
+}
+.game__throw__cards div.card_{
+	background-image: url("/images/unocards-pack.jpg");
+	border: solid 1px black;
+	width: 100%;
+	height: 100%;
+}
+.game__throw__cards div.card_-wrapper{
+	position: absolute;
+    animation-duration: 0.6s;
+}
+.game__throw__cards div.card_-wrapper.e{
+	animation-name: appear_enemy;
+}
+.game__throw__cards div.card_-wrapper.a{
+	animation-name: appear;
+}
+@keyframes appear {
+    from {
+    	top: 80%;
+    	transform: scale(0.4);
+    }
+    to {
+    	transform: scale(1);
+    }
+}
+@keyframes appear_enemy {
+    from {
+    	top: -80%;
+    	transform: scale(0.4);
+    }
+    to {
+    	transform: scale(1);
+    }
+}
+.game__section.room__actions{
+	margin-top: 15px;
+}
+.game__menu{
+	padding: 5px;
+	padding-left: 0px;
+	padding-right: 0px;
+	border-bottom: solid 1px white;
+	display: flex;
+}
+.game__menu .button{
+	border: solid 1px white;
+	color: white;
+	text-align: center;
+	border-radius: 2px;
+	cursor: pointer;
+	transition-duration: 0.2s;
+}
+.game__menu .button.uno{
+	font-weight: bolder;
+	letter-spacing: 0.08em;
+}
+.game__menu .button.sendAll{
+	background-color: #f44336;
+}
+.game__menu .button:hover{
+	background-color: white;
+	color: black;
+}
+.game__menu .button:active{
+	border: solid 1px black;
+}
+.game__section.room__yourCards{
+	min-height: 15%;
+	overflow-x: auto;
+	overflow-y: hidden;
+}
+.game__section.room__yourCards .game__yourCards{
+	display: inline-flex;
+	box-sizing: border-box;
+}
+.game__section.room__yourCards 
+.game__yourCards .card__wrapper>div{
+	text-align: center;
+}
+.game__section.room__yourCards .card_{
+	background-image: url("/images/unocards-pack.jpg");
+	border: solid 1px black;
+	transition-duration: 0.3s;
+	cursor: pointer;
+}
+
+
+.scene--game__room__chat{
+	position: absolute;
+	right: auto;
+    bottom: auto;
+    border: none;
+    border-radius: 0px;
+	background-color: #03a9f4;
+    padding: 10px;
+}
+.scene--game__room__chat:focus{
+	outline: none;
+}
+
+.chat__room{
+	height: 100%;
+	width: 100%;
+}
+.chat__room .header{
+	font-size: 1.1rem;
+	display: flex;
+	flex-flow: row;
+	justify-content: center;
+	align-items: center;
+	height: 35px;
+}
+.chat__room .header .text{
+	width: 95%;
+	color: white;
+}
+.chat__room .header .icon{
+	width: 25px;
+	height: 25px;
+	line-height: 25px;
+	text-align: center;
+    background-color: white;
+    color: #03a9f4;
+    font-size: bold;
+    cursor: pointer;
+}
+.chat__room .messages{
+	display: flex;
+	flex-flow: column;
+	height: auto;
+	padding-left: 5px;
+	padding-right: 5px;
+	width: 	100%;
+	margin-top: 10px;
+	background-color: transparent;
+	overflow-y: auto;
+}
+.messages .message-wrapper{
+	margin-top: 10px;
+}
+.messages .message{
+	border-radius: 5px;
+	display: inline-block;
+	padding: 5px;
+	background-color: white;
+}
+.messages .message.myself{
+	float: right;
+}
+.messages .message .from{
+	font-size: 0.8rem;
+	margin-bottom: 5px;
+}
+.messages .message .text{
+	font-size: 0.9rem;
+}
+.input__{
+	position: absolute;
+	bottom: 2rem;
+	width: calc(100% - 26px);
+}
+.input__ input{
+	font-size: 0.9rem;
+	height: 2rem;
+	background-color: white;
+	margin: 0px;
+	padding: 3px;
+	border: none;
+	box-shadow: none;
+}
+
+.input__ input[type=text]:focus:not([readonly]){
+    border-bottom: none;
+    box-shadow: none;
+}

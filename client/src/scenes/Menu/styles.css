@@ -16,6 +16,9 @@
 	height: 100%;
 	min-height: 100vh;
 }
+.scene--menu h1{
+	margin-top: 0px;
+}
 .scene--menu .foot{
 	padding: 5px;
 	color: white;

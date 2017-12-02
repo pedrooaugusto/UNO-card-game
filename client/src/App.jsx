@@ -1,7 +1,8 @@
 import React from 'react';
 import Menu from './scenes/Menu/';
 import Error from './scenes/Error/';
-import Hall from './scenes/Hall/index.jsx';
+import Hall from './scenes/Hall/';
+import Game from './scenes/Game/';
 import {Route, Switch, Router} from 'react-router-dom';
 import History from './data/History';
 
@@ -18,6 +19,11 @@ function AppView(props) {
 					<Hall 
 						history = {History} 
 						{...props.hall} />
+				</Route>
+				<Route path="/game/:name">
+					<Game 
+						history = {History} 
+						{...props.game} />
 				</Route>
 				<Route path="/nopermission">
 					<Error 

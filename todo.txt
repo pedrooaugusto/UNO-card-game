@@ -2,16 +2,19 @@ To do list:
 
 --iniciar o game assim que o número de jogadores for atingido
 --reformular tamnhos e disposição de items da tela hall no celular (de vdd)
---fazer a tela de Game
 --deixar a tela Home mais amigável
 --remove  load all in every change
---properly name bots
 
 Doing List:
 
+--fazer a tela de Game
 
 Done list:
 
+--animações de jogar carta
+--front end para chat no game
+--front end para multiplas cartas
+--properly name bots
 --transformar espaços vazios da hall em bot
 --destranformar espaço vazio, da hall, de bot
 --refatorar servidor

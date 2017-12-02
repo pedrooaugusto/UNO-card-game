@@ -3,7 +3,9 @@ import {Link} from 'react-router-dom';
 import './styles.css';
 
 class Error extends React.Component{
-	
+	componentDidMount() {
+		document.title = "Uno - Error";
+	}
 	render(){
 		return(
 			<div className="scene--error">

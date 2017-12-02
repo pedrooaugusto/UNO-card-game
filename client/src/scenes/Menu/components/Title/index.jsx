@@ -17,22 +17,17 @@ const style = {
         "margin"    :  "0px"
     }
 };
-class Title extends React.Component{
-    
-    shouldComponentUpdate(nextProps, nextState){
-        return false;
-    }
-    render(){
-        return(
-            <div>
-                <h1 style={style.title}>
-                    UNO
-                </h1>
-                <p style={style.description}>
-                    Jogue <b>UNO</b> online com seus amigos. Its free!
-                </p>
-            </div>
-        );
-    }
+
+const Title = (props) => {
+    return(
+        <div>
+            <h1 style={style.title}>
+                UNO
+            </h1>
+            <p style={style.description}>
+                Jogue <b>UNO</b> online com seus amigos. Its free!
+            </p>
+        </div>        
+    );
 }
 export default Title;

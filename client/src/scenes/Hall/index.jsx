@@ -10,6 +10,10 @@ class Hall extends React.Component {
 	componentWillMount() {
 		this.props.checkCredentials();
 	}
+	componentWillReceiveProps(nextProps) {
+		if(nextProps.state.get('room'))
+			document.title = "Uno - Hall - " + nextProps.state.getIn(['room', 'name']);
+	}
 	quit = () => {
 		const answer = window.confirm("Deseja realmente sair da sala? (theres no coming back)");
 		if(answer){

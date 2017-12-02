@@ -43,7 +43,6 @@ class CommonHallStore extends ReduceStore
 				return state;
 
 			case MenuActionTypes.HALL_EXIT_MEMBER:
-				console.log(action.data);
 				return state
 					.updateIn(['room', 'players'], 
 						a => a.filter(b => b.get("socketId") !== action.data));

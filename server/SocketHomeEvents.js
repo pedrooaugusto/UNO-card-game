@@ -119,7 +119,7 @@ module.exports.joinRoom = function (socket) {
         {
             const room = await Room.findOne({name: data.room});
 
-            if(room.status === "IN GAME")
+            if(room.players.length === room.capacity)
                 return socket.emit("/home/join-room/fail", "Sala esta esta lotada!");
             if(room.players.find(p => p.name === data.nickName))
                 return socket.emit("/home/join-room/fail", "Este nickname já existe");
@@ -132,6 +132,8 @@ module.exports.joinRoom = function (socket) {
             };
             socket.leave("__HOME");
             room.players.push(player);
+            if(room.players.length === room.capcity)
+                room.status = "IN GAME";
             await room.save();
             socket.emit("/hall/join-room/successful", room.name);
         }catch(err){
@@ -139,3 +141,8 @@ module.exports.joinRoom = function (socket) {
         }
     });
 }
+
+/*
+
+["red-turn", "blue-turn", "green-turn", "yellow-turn", "red-one", "blue-one", "green-one", "yellow-one", "red-two", "blue-two", "green-two", "yellow-two", "red-three", "blue-three", "green-three", "yellow-three", "red-four", "blue-four", "green-four", "yellow-four", "red-five", "blue-five", "green-five", "yellow-five", "red-six", "blue-six", "green-six", "yellow-six", "red-seven", "blue-seven", "green-seven", "yellow-seven", "red-eight", "blue-eight", "green-eight", "yellow-eight", "red-nine", "blue-nine", "green-nine", "yellow-nine"]
+*/
