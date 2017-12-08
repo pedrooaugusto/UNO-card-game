@@ -91,7 +91,8 @@ module.exports.exit = function(socket) {
                 const room = await Room.findOne({name: roomName});
                 const player = room.players.find(a => a.socketId === socket.id);
                 player.remove();
-                if(room.players.length === 0) 
+                if(room.players.length === 0 || 
+                    room.players.filter(a => a.name !== player.name).every(a => a.isBot)) 
                    await room.remove();
                 else
                     await room.save();
@@ -129,7 +130,6 @@ module.exports.addBot = function(socket) {
                     if(!bots.find(a => a.name === value))
                         return {value, index};
                 }).filter(a => a).shift();
-                console.log(avaliableNames);
                 const newBot = {
                     socketId: "bot-"+avaliableNames.index+1,
                     name: avaliableNames.value,

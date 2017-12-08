@@ -19,7 +19,7 @@
 	.hall__room__players__list__player{
 		width: 35px;
 		height: 35px;
-		border-width: 1px;
+		border-width: 2px;
 	}
 	.hall__room__players__list__player.myself{
 		width: 40px;
@@ -47,7 +47,7 @@
 		min-width: 85%;
 		max-width: 85%;
         top: 35%;
-        min-height: 45%;
+        min-height: auto;
         left: 50%;
         right: auto;
         bottom: auto;

@@ -35,11 +35,20 @@ class CreateRoomAction{
     		result[k] = v;
 		Socket.getSocket().emit("/home/create-room", result);
 	}
+	aboutStates(a){
+		return function () {
+			AppDispatcher.dispatch({
+				type: MenuActionTypes.MENU_MODAL_ABOUT,
+				data: a
+			});
+		}
+	}
 	getActions(){
 		return {
 			onOpenModal:  this.open,
 			onCloseModal: this.close,
-			onCreate: 	  this.create
+			onCreate: 	  this.create,
+			aboutStates: this.aboutStates
 		}
 	}
 }

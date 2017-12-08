@@ -44,6 +44,9 @@ io.on("connection", function(socket){
     GameEvents.startGameCheck(socket);
     GameEvents.requestCards(socket);
     GameEvents.sendCard(socket);
+    GameEvents.buyCard(socket);
+    GameEvents.timeouted(socket);
+    GameEvents.newMessage(socket);
 });
 
 http.listen(app.get("port"), function () {

@@ -4,16 +4,13 @@
 		width: 100%;
 	}
 	.game__section.room__players div.player{
-		font-size: 1.3rem;
-		width: 35px;
-		height: 35px;
-	}
-	.game__section.room__players div.player.active{
+		font-size: 1.5rem;
 		width: 40px;
 		height: 40px;
 	}
 	.game__section.room__message div.message{
-		font-size: 1rem;
+		font-size: 1.2rem;
+		color: white;
 	}
 	.room__cards{
 		height: 25%;
@@ -39,6 +36,14 @@
 		margin-left: 3px;
 		background-size: calc(2048*0.3px);
 	}
+	@keyframes cardappear{
+		from{
+			width: 0px;
+		}
+		to{
+			width: calc(209.8*0.3px);
+		}
+	}
 	.scene--game__room__chat{
 		min-width: 90%;
 		max-width: 90%;
@@ -55,6 +60,40 @@
 	.chat__room .header{
 		margin-top: 15px;
 	}
+	.scene--game__room__chooseColor{
+		min-width: 90%;
+		max-width: 90%;
+	    top: 50%;
+	   	min-height: 60vh;
+	    height: auto;
+	    left: 50%;
+	    margin-right: -50%;
+	    transform: translate(-50%, -50%);
+	}
+	.scene--game__room__unoing{
+		width: 80%;
+		top: 50%;
+	    height: auto;
+	    left: 50%;
+	    margin-right: -50%;
+	    transform: translate(-50%, -50%);
+	}
+	.scene--game__room__endGame{
+		width: 85%;
+		top: 50%;
+	    height: auto;
+	    left: 50%;
+	    margin-right: -50%;
+	    transform: translate(-50%, -50%);
+	}
+	.scene--game__room__rules{
+	    max-width: 90%;
+		top: 50%;
+		height: 70%;
+		left: 50%;
+		margin-right: -50%;
+		transform: translate(-50%, -50%);
+	}
 }
 @media only screen and (min-width: 601px){
 	.game__wrapper{
@@ -65,12 +104,8 @@
 		width: 45px;
 		height: 45px;
 	}
-	.game__section.room__players div.player.active{
-		width: 50px;
-		height: 50px;
-	}
 	.game__section.room__message div.message{
-		font-size: 1.1rem;
+		font-size: 1.3rem;
 	}
 	.room__cards{
 		height: 30%;
@@ -96,6 +131,14 @@
 		margin-left: 5px;
 		background-size: calc(2048*0.4px);
 	}
+	@keyframes cardappear{
+		from{
+			width: 0px;
+		}
+		to{
+			width: calc(209.8*0.4px);
+		}
+	}
 	.scene--game__room__chat{
 		min-width: 35%;
 		max-width: 35%;
@@ -111,6 +154,42 @@
 	}
 	.chat__room .header{
 		margin-top: 0px;
+	}
+	.scene--game__room__chooseColor{
+		min-width: 30%;
+		max-width: 30%;
+	    top: 50%;
+	   	min-height: 30vh;
+	    height: auto;
+	    left: 50%;
+	    margin-right: -50%;
+	    transform: translate(-50%, -50%);
+	}
+	.scene--game__room__unoing{
+		max-width: 30%;
+		width: 25%;
+	    top: 40%;
+	   	height: auto;
+	    left: 50%;
+	    margin-right: -50%;
+	    transform: translate(-50%, -50%);	
+	}
+	.scene--game__room__endGame{
+		max-width: 30%;
+		width: 25%;
+	    top: 40%;
+	   	height: auto;
+	    left: 50%;
+	    margin-right: -50%;
+	    transform: translate(-50%, -50%);
+	}
+	.scene--game__room__rules{
+	    max-width: 45%;
+		top: 50%;
+		height: 70%;
+		left: 50%;
+		margin-right: -50%;
+		transform: translate(-50%, -50%);
 	}
 }
 body{
@@ -128,14 +207,14 @@ body{
 .game__wrapper{
 	display: flex;
 	flex-flow: column;
-	border-left: solid 1px white;
-	border-right: solid 1px white;
+/*	border-left: solid 1px white;
+	border-right: solid 1px white;*/
 	min-height: fit-content;
 	height: 100vh;
 }
 .game__section{
 	padding: 5px;
-	width: calc(100% - 10px);
+	width: 100%;
 	margin-top: 15px;
 	position: relative;
 }
@@ -164,22 +243,39 @@ body{
 	margin-right: 5px;
 	transition-duration: 0.3s;
 }
-.game__section.room__players div.player.active{
-	color: black;
-	border: solid 2px black;
+.game__section.room__players div.player.uno{
+	animation-duration: 0.5s;
+	animation-name: unoing;
+	animation-iteration-count: infinite;
+	animation-timing-function: ease-in-out;
 }
-.game__section.room__players div.player__stats{
+
+@keyframes unoing{
+	from{
+		transform: scale(1);
+	}
+	to{
+		transform: scale(1.2);
+	}
+}
+
+.game__section.room__players div.player.active{
+	color: white;
+	background-color: #00bcd4;
+	border: solid 2px white;
+}
+.game__section.room__players div.ani.player__stats{
 	position: absolute;
 	margin-top: 5px;
 	margin-left: 10px;
 	font-weight: bolder;
 	font-size: 1.5rem;
-	transition-duration: 2s;
+	transition-duration: 1.5s;
 	animation-name: stats;
-	animation-duration: 2s;
+	animation-duration: 1.5s;
 	opacity: 0;
 	animation-timing-function: ease;
-	top: 100%;
+	/*top: 100%;*/
 }
 .game__section.room__players div.player__stats.negative{
 	color: red;
@@ -193,7 +289,7 @@ body{
 		top: 100%;
 	}
 	to{
-		top: 20%;
+		top: 5%;
 		opacity: 0;
 	}
 }
@@ -203,8 +299,10 @@ body{
 }
 .game__section.room__message div.message{
 	text-align: center;
-	color: #0c0c0c;
-	letter-spacing: 0.05em;
+	color: #00bcd4;
+	background-color: white;
+	font-weight: bold;
+	letter-spacing: 0.02em;
 }
 
 .game__throw__cards{
@@ -222,7 +320,7 @@ body{
 }
 .game__throw__cards div.card_-wrapper{
 	position: absolute;
-    animation-duration: 0.6s;
+    animation-duration: 1s;
 }
 .game__throw__cards div.card_-wrapper.e{
 	animation-name: appear_enemy;
@@ -299,6 +397,11 @@ body{
 	transition-duration: 0.3s;
 	cursor: pointer;
 }
+.game__section.room__yourCards .card_.ani{
+	animation-name: cardappear;
+	animation-duration: 0.6s;
+	animation-direction: normal;
+}
 
 
 .scene--game__room__chat{
@@ -310,6 +413,7 @@ body{
 	background-color: #03a9f4;
     padding: 10px;
 }
+
 .scene--game__room__chat:focus{
 	outline: none;
 }
@@ -388,4 +492,78 @@ body{
 .input__ input[type=text]:focus:not([readonly]){
     border-bottom: none;
     box-shadow: none;
+}
+
+.scene--game__room__chooseColor{
+	position: absolute;
+	right: auto;
+    bottom: auto;
+    border: none;
+    border-radius: 0px;
+	background-color: white;
+    padding: 10px;
+}
+
+.scene--game__room__unoing{
+	position: absolute;
+	right: auto;
+    bottom: auto;
+    border: none;
+    border-radius: 0px;
+	background-color: white;
+    padding: 10px;
+}
+.scene--game__room__unoing p{
+	font-size: 1.15rem;
+}
+
+.scene--game__room__endGame{
+	position: absolute;
+	right: auto;
+    bottom: auto;
+    border: none;
+    border-radius: 0px;
+	background-color: rebeccapurple;
+    padding: 10px;
+}
+.scene--game__room__endGame p{
+	font-size: 1.1rem;
+	color: white;
+}
+.scene--game__room__endGame li{
+	color: white;
+}
+
+
+
+.scene--game__room__rules{
+	position: absolute;
+	right: auto;
+    bottom: auto;
+    border: none;
+    border-radius: 0px;
+	background-color: white;
+    padding: 10px;
+}
+
+.scene--game__room__rules .body{
+	overflow-y: auto;
+	position: relative;
+	height: 87%;
+}
+.scene--game__room__rules .body .rulas .lab{
+	text-align: center;
+	font-weight: bold;
+}
+.scene--game__room__rules .footer{
+	position: relative;
+	height: 13%;
+}
+.scene--game__room__rules .title{
+	font-size: 1.2rem;
+	text-align: center;
+	font-weight: bold;
+}
+.scene--game__room__rules .faq .question{
+	font-weight: bold;
 }

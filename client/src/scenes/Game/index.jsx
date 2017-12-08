@@ -1,147 +1,177 @@
 import React from 'react';
-// import ReactModal from 'react-modal';
 import Players from './components/Players/';
 import UsedCards from './components/UsedCards/';
 import YourCards from './components/YourCards/';
 import Feedback from './components/Feedback/';
+import ChooseColor from './components/ChooseColor/';
+import UnoModal from './components/UnoModal/';
+import EndGameModal from './components/EndGameModal/';
+import StandardModal from './components/StandardModal/';
+import RulesModal from './components/RulesModal/';
+import ChatModal from './components/ChatModal/';
+
 import './styles.css';
 
-
-const yourCards = [
-	{
-		name: 'red-turn',
-		isSelected: false,
-		used: false
-	},
-	{
-		name: 'blue-nine',
-		isSelected: false,
-		used: false
-	},
-	{
-		name: 'yellow-zero',
-		isSelected: false,
-		used: false
-	},
-	{
-		name: 'red-buy-two',
-		isSelected: false,
-		used: false
-	},
-	{
-		name: 'change-color',
-		isSelected: false,
-		used: false
-	},
-	{
-		name: 'red-turn',
-		isSelected: false,
-		used: false
-	},
-	{
-		name: 'blue-block',
-		isSelected: false,
-		used: false
-	},
-	{
-		name: 'green-six',
-		isSelected: false,
-		used: false
-	},
-	{
-		name: 'yellow-zero',
-		isSelected: false,
-		used: false
-	},
-	{
-		name: 'buy-four',
-		isSelected: false,
-		used: false
-	}
-];
-const players = [
-	{
-		name: "Unicarioca",
-		active: true
-	},
-	{
-		name: "Myself",
-		active: false
-	},
-	{
-		name: "The Doctor",
-		active: false
-	},
-	{
-		name: "Diego Ferreira",
-		active: false
-	}
-];
-
 class Game extends React.Component{
-	constructor(props) {
-		super(props);
-		this.state = {
-			countDown: 30, 
-			yourCards, 
-			usedCards: [],
-			players,
-			mopen: false
-		};
-		this.timeout = 0;
-	}
 	componentDidMount() {
 		document.title = "Uno - Gaming - "+this.props.history.location.pathname.substr(6);
 		this.props.checkCredentials();
 	}
-	sendAll = () => {
-		const usedCard = this.props.state.get("yourCards").filter(a => a.get("isSelected"));
-		this.props.sendCard(usedCard);
+	checkTurn = (b = false) => 
+	{
+		if(this.props.state.get("froozen"))
+			return {
+				ok: false, 
+				text: "Processando o último movimento, por favor espere."
+			};
+
+		if(this.props.state.get("myIndex") !== this.props.state.get('currentPlayer'))
+			return {
+				ok: false,
+				text: "Não é a sua vez, cara!"
+			};
+
+		if(b === false && this.props.state.get("myIndex") === this.props.state.getIn(['needToBuy', 'who']) && 
+			this.props.state.getIn(['needToBuy', 'howMany']) > 0)
+			return {
+				ok: false,
+				text: "Você precisa comprar "+this.props.state.getIn(['needToBuy', 'howMany'])+" cartas!"
+			};
+
+		return {
+			ok: true, 
+			text: "ok"
+		};
 	}
-	// sendAll = () => {
-	// 	const usedCard = this.state.yourCards.filter(a => true);
-	// 	usedCard.map((v,i) => {
-	// 		if(v.isSelected) this.sendCard(i, v.name);
-	// 	});
-	// }
-	// sendCard = (index, name) => {
-	// 	this.setState((a, b) => {
-	// 		a.yourCards[index].used = true;
-	// 		a.yourCards[index].isSelected = false;
-	// 		return {
-	// 			yourCards: a.yourCards
-	// 		};
-	// 	});
-	// 	const rotate = ((c) => c % 2 === 0 ? c : -c)(Math.floor(Math.random()*6));
-	// 	this.setState((a, b) => {
-	// 		a.usedCards.push({
-	// 			name,
-	// 			rotate
-	// 		});
-	// 		return {
-	// 			usedCards: a.usedCards
-	// 		};
-	// 	});
-	// }
-	// selectCard = (index, un) => {
-	// 	this.setState((a, b) => {
-	// 		a.yourCards[index].isSelected = (un ? false : true);
-	// 		return {
-	// 			yourCards: a.yourCards
-	// 		};
-	// 	});
-	// }
-	thick(){
-		this.timeout = setInterval(() => this.setState(a => ({countDown: a.countDown-1})), 1000);
+	checkCard = (card = null, all = false) => 
+	{
+		if(all)
+		{
+			const cards = this.props.state.get("selectedCards");
+			let ok = true;
+			let last = this.props.state.get("usedCards").get(this.props.state.get("usedCards").size - 1);
+			for(let i = 0; i < cards.size; i++)
+			{
+				if(!this.checkCard_(cards.get(i), last, i))
+				{
+					ok = false;
+					break;
+				}
+				else
+				{
+					last = cards.get(i);
+				}
+			}
+			if(!ok)
+			{
+				// window.alert("Sua combinação de cartas não é válida!");
+				this.props.openStandardModal("Sua combinação de cartas não é válida!");
+				return false;
+			}
+			else
+			{ 
+				return  true;
+			}
+		}
+		else
+		{
+			const last = this.props.state.get("usedCards").get(this.props.state.get("usedCards").size - 1);
+			if(!this.checkCard_(card, last, 0))
+			{
+				// window.alert("Sua combinação de cartas não é válida!");
+				this.props.openStandardModal("Esta combinação de cartas não é válida!");
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+	}
+	checkCard_ = (current, last, nc = 0) => 
+	{
+		const n1 = current.name || current.get("name");
+		const arrNameLast = last.get("name").split("-");
+		const arrNameCurrent = n1.split("-");
+		if(nc > 0 && arrNameCurrent[1] === arrNameLast[1])
+			return true;
+		else if(nc > 0)
+			return false;
+		if(n1 === "buy-four" || n1 === "change-color")//coringa sem restrição
+			return true;
+		if((last.get("name") === "change-color" || last.get("name") === "buy-four")//se o último for coringa match na cor
+			&& last.get("color") === arrNameCurrent[0])
+			return true;
+		else if(last.get("name") === "change-color" || last.get("name") === "buy-four")// se não deu match na cor nao vai dar em nada
+			return false;
+		if(arrNameCurrent[0] === arrNameLast[0])//cores iguais para cartas não coringa
+			return true;
+		if(arrNameCurrent[1] === arrNameLast[1])//ações iguais para cartas não coringa
+			return true;
+		return false;
+	}
+	sendAll = () => 
+	{
+		const {text, ok} = this.checkTurn();
+		if(ok)
+		{
+			if(this.checkCard(null, true))
+			{
+				const card = this.props.state.get("selectedCards").map(a => ({
+					id: a.get('id'),
+					name: a.get('name'),
+					from: this.props.state.get('currentPlayer'),
+					rotate: ((c) => c % 2 === 0 ? c : -c)(Math.floor(Math.random()*6)),
+					color: a.get("color")
+				}));
+				const ctx = {
+					currentPlayerIndex: this.props.state.get('currentPlayer'),
+					capacity: this.props.state.getIn(['room', 'capacity']),
+					direction: this.props.state.get('direction')
+				}
+				this.props.sendCard({card, ctx});
+			}
+		}
+		else
+		{
+			this.props.openStandardModal(text);
+		}
+	}
+	buyCard = () => 
+	{
+		const {ok, text} = this.checkTurn(true);
+		const ctx = {
+			currentPlayerIndex: this.props.state.get('currentPlayer'),
+			capacity: this.props.state.getIn(['room', 'capacity']),
+			direction: this.props.state.get('direction'),
+			needToBuy: this.props.state.getIn(['needToBuy', 'howMany']),
+			forSaleCardsLength: this.props.state.get('unUsedCards').size,
+			pass: false
+		};
+		const w = `Não existem cartas para comprar passando a vez...`;
+		if(this.props.state.get('unUsedCards').size === 0)
+			return this.props.buyCardsIsEmpty(w, ctx);
+		if(ok)
+			this.props.buyCard(ctx);
+		else
+			this.props.openStandardModal(text);
+	}
+	chooseColor = (a, b) => {
+		this.props.onOpenChooseColor();
+		if(typeof a !== "number")
+			this.props.chooseColorSend(a);
+		else
+			this.props.chooseColorSelect(a, b);
 	}
 	render(){
 		if(this.props.state.get("room") === undefined)
-			return <h1><center>Loading...</center></h1>;
+			return <h1><center>Loading! It will take 8 seconds or less!</center></h1>;
 		const cursor = this.props.state.get("froozen") ? "wait" : "pointer";
 		const capacity = this.props.state.getIn(["room", "capacity"]);
 		const direction = this.props.state.get("direction");
 		const currentPlayerIndex = this.props.state.get('currentPlayer');
-		
+		const ss__ = this.props.state.get("usedCards").size;
+		const lastCard = ss__ > 0 ? this.props.state.get("usedCards").get(ss__ - 1) : undefined;
 		return (
 			<div className = "scene--game">
 				<div className = "container__">
@@ -154,12 +184,17 @@ class Game extends React.Component{
 						<Players 
 							players = {this.props.state.getIn(["room", "players"])}
 							currentPlayerIndex = {currentPlayerIndex}
-							previousPlayer = {this.props.state.get("previousPlayer")}/>
-						<div className = "game__section room__message">							<Feedback 
+							previousPlayer = {this.props.state.get("previousPlayer")}
+							playersCards = {this.props.state.get("playersCards")}/>
+						<div className = "game__section room__message">
+							<Feedback 
 								players = {this.props.state.getIn(["room", "players"])}
 								myIndex = {this.props.state.get("myIndex")}
 								currentPlayerIndex = {currentPlayerIndex}
-								text = {this.props.state.get("feedback")}/>
+								text = {this.props.state.get("feedback")}
+								howMany = {this.props.state.getIn(["needToBuy", "howMany"])}
+								time = {this.props.state.get("cronometro")}
+								color = {lastCard ? lastCard.get("color") : undefined}/>
 						</div>
 						<div className = "game__section room__cards">
 							<UsedCards 
@@ -168,11 +203,10 @@ class Game extends React.Component{
 						</div>
 						<div className = "game__section room__actions">
 							<div className = "game__menu">
-								<div className = "button chat" onClick = {this.props.openModal}>Chat</div>
-								<div className = "button">Buy</div>
-								<div className = "button">Help</div>
-								<div className = "button uno">UNO!</div>
-								{this.props.state.get("yourCards").filter(a => a.get("isSelected")).size > 0 &&
+								<div className = "button chat" onClick = {this.props.openChat}>Chat</div>
+								<div className = "button" onClick = {this.buyCard}>Buy</div>
+								<div className = "button" onClick = {this.props.openRulesModal}>Help</div>
+								{this.props.state.get("selectedCards").size > 0 &&
 									(<div className = "button sendAll" onClick = {this.sendAll}>Send All</div>)}
 							</div>
 						</div>
@@ -185,65 +219,44 @@ class Game extends React.Component{
 								currentPlayerIndex = {currentPlayerIndex}
 								capacity = {capacity}
 								direction = {direction}
-								myIndex = {this.props.state.get("myIndex")}/>
+								myIndex = {this.props.state.get("myIndex")}
+								checkTurn = {this.checkTurn}
+								chooseColor = {this.chooseColor}
+								checkCard = {this.checkCard}
+								openStandardModal = {this.props.openStandardModal}/>
 						</div>
 					</div>
 				</div>
-				{/*<ReactModal
-					className = "scene--game__room__chat"
-			    	isOpen={false}
-			        style={modalStyle}
-			        onRequestClose = {this.closeModal}
-			        shouldCloseOnOverlayClick={true}
-			        contentLabel="Chat">
-			        	<div className = "chat__room">
-			        		<div className = "header">
-			        			<div className = "text">Nerd For Speed</div>
-			        			<div className = "icon" onClick = {this.closeModal}>x</div>
-			        		</div>
-			        		<div className = "messages">
-			        			<div className = "message-wrapper">
-			        				<div className = "message">
-				        				<div className = "from">~Pedro</div>
-				        				<div className = "text">Hello Jen!</div>
-				        			</div>	
-			        			</div>
-			   			        <div className = "message-wrapper">
-			   			        	<div className = "message myself">
-				        				<div className = "from">~Pedro</div>
-				        				<div className = "text">Hello Jen!</div>
-			        				</div>
-			        			</div>
-			        			<div className = "message-wrapper">
-			        				<div className = "message">
-				        				<div className = "from">~Pedro</div>
-				        				<div className = "text">Hello Jen!</div>
-				        			</div>	
-			        			</div>
-			   			        <div className = "message-wrapper">
-			   			        	<div className = "message myself">
-				        				<div className = "from">~Pedro</div>
-				        				<div className = "text">Hello Jen!</div>
-			        				</div>
-			        			</div>
-			        			<div className = "message-wrapper">
-			        				<div className = "message">
-				        				<div className = "from">~Pedro</div>
-				        				<div className = "text">Hello Jen!</div>
-				        			</div>	
-			        			</div>
-			   			        <div className = "message-wrapper">
-			   			        	<div className = "message myself">
-				        				<div className = "from">~Pedro</div>
-				        				<div className = "text">Hello Jen!</div>
-			        				</div>
-			        			</div>
-			        		</div>
-			        		<div className = "input__">
-			        			<input type = "text" name = "msg" autoFocus="true" />
-			        		</div>
-			        	</div>
-			    </ReactModal>*/}
+				<ChooseColor 
+					isOpen = {this.props.state.getIn(['chooseColor', 'isOpen'])}
+					onCloseChooseColor = {this.props.onCloseChooseColor}
+					chooseColor = {this.props.state.get("chooseColor")}
+					sendCard = {this.props.sendCard}
+					selectCard = {this.props.selectCard}/>
+				<UnoModal 
+					isOpen = {this.props.state.getIn(['uno', 'isOpen'])}
+					playerName = {this.props.state.getIn(['uno', 'who', 'name'])}
+					onCloseUnoModal = {this.props.closeUnoing}/>
+				<EndGameModal
+					isOpen = {this.props.state.getIn(['endGame', 'isOpen'])}
+					players = {this.props.state.getIn(['endGame', 'players'])}
+					onCloseModal = {this.props.endGame}/>
+				<StandardModal 
+					isOpen = {this.props.state.getIn(['standardModal', 'isOpen'])}
+					title = {"Information"}
+					text = {this.props.state.getIn(['standardModal', 'text'])}
+					onCloseModal = {this.props.closeStandardModal}/>
+				<RulesModal 
+					isOpen = {this.props.state.get('rulesModal')}
+					onCloseModal = {this.props.closeRulesModal}/>
+				<ChatModal
+					isOpen = {this.props.state.getIn(['messagesModal', 'isOpen'])}
+					messages = {this.props.state.getIn(['messagesModal', 'messages'])}
+					roomName = {this.props.state.getIn(['room', 'name'])}
+					onCloseModal = {this.props.closeChat}
+					socketId = {this.props.socketID}
+					sendMessage = {this.props.sendMessage}
+					myName = {this.props.state.getIn(['room', 'players']).get(this.props.state.get('myIndex')).get('name')}/>
 			</div>
 		);
 	}

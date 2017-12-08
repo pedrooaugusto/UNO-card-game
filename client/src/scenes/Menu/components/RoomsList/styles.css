@@ -1,18 +1,24 @@
 .content{
 	padding: 10px;
-	min-height: 350px;
+	min-height: 300px;
 }
-.content h5{
+.content .content__title{
 	text-align: center;
+	font-size: 1.4rem;
+	margin-top: 10px;
 }
 .rooms-list-wrapper{
 	max-height: 300px;
 	overflow-y: auto; 
 }
-@media screen and (min-width: 600px) {
+@media screen and (min-width: 601px) {
 	.content
 	{
-		min-height: 400px; 
+		min-height: 350px; 
+	}
+	.content .content__title{
+		font-size: 1.5rem;
+		margin-top: 10px;
 	}
 }
 .rooms-list thead, .rooms-list thead tr{

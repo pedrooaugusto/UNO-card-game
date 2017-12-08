@@ -1,58 +1,81 @@
 import React from 'react';
 import UnoPackMap from '../../map-uno-pack-images';
 
-const Card = (props) => {
-	let time = -1; 
-	const sendCard = () => {
-		if(props.myIndex !== props.currentPlayerIndex)
-			return window.alert("Please, wait yout turn");
+
+class Card 	extends React.Component{
+	constructor(props){
+		super(props);
+		this.time = -1;
+	}
+	createObj(){
 		const rotate = ((c) => c % 2 === 0 ? c : -c)(Math.floor(Math.random()*6));
 		const obj = {
 			card: [{
-				id: props.key_,
-				name: props.name,
-				from: props.currentPlayerIndex,
+				id: this.props.key_,
+				name: this.props.name,
+				from: this.props.currentPlayerIndex,
 				rotate
 			}],
 			ctx: {
-				currentPlayerIndex: props.currentPlayerIndex,
-				capacity: props.capacity,
-				direction: props.direction
+				currentPlayerIndex: this.props.currentPlayerIndex,
+				capacity: this.props.capacity,
+				direction: this.props.direction
 			}
 		}
-		props.sendCard(obj);		
+		return obj;
 	}
-	const clickEvent = (event) => {
-		if(props.cursor === "wait")
-			return false;
-		if(time === -1)
-			time = setTimeout(sendCard, 200);
-		else if(time !== -1)
+	sendCard = () => {
+		if(this.props.checkCard({name: this.props.name}, false, 0))
 		{
-			clearTimeout(time);
-			props.selectCard(props.key_, !props.isSelected);
-			time = -1;
+			if(this.props.name === "change-color" || this.props.name === "buy-four")
+				this.props.chooseColor(this.createObj());
+			else
+				this.props.sendCard(this.createObj());
 		}
 	}
-	const x = UnoPackMap.get(props.name).x;
-	const y = UnoPackMap.get(props.name).y;
-	const css = {
-		backgroundPosition : `${x}px ${y}px`,
-		transform: `scale(${props.isSelected ? 0.75 : 0.9})`,
-		cursor: props.cursor
+	clickEvent = (event) => {
+		const {ok, text} = this.props.checkTurn();
+		if(!ok)
+		{
+			this.props.openStandardModal(text);
+		}
+		else if(this.time === -1)
+		{
+			this.time = setTimeout(this.sendCard, 200);
+		}
+		else if(this.time !== -1)
+		{
+			clearTimeout(this.time);
+			this.time = -1;
+			if((this.props.name === "buy-four" || 
+				this.props.name === "change-color") && !this.props.isSelected)
+				this.props.chooseColor(this.props.key_, !this.props.isSelected);
+			else
+				this.props.selectCard(this.props.key_, !this.props.isSelected);
+		}
 	}
-	if(props.used)
-		return null;
-	return (
-		<div 
-			onClick = {clickEvent}
-			className = "card_" 
-			style = {css}
-			data-selected = {props.isSelected}
-			data-name = {props.name}>
-		</div>			
-	);
+	render(){
+		if(this.props.used)
+			return null;
+		const x = UnoPackMap.get(this.props.name).x;
+		const y = UnoPackMap.get(this.props.name).y;
+		const css = {
+			backgroundPosition : `${x}px ${y}px`,
+			transform: `scale(${this.props.isSelected ? 0.75 : 0.9})`,
+			cursor: this.props.cursor
+		};
+		return (
+			<div 
+				onClick = {this.clickEvent}
+				className = {this.props.isNew ? "card_ ani" : "card_"} 
+				style = {css}
+				data-selected = {this.props.isSelected}
+				data-name = {this.props.name}>
+			</div>
+		);
+	}
 }
+
 const YourCards = (props) => {
 	return (
 		<div className = "game__yourCards">
@@ -69,9 +92,14 @@ const YourCards = (props) => {
 						capacity = {props.capacity}
 						direction = {props.direction}
 						used = {card.get("used")}
-						myIndex = {props.myIndex}/>
+						myIndex = {props.myIndex}
+						checkTurn = {props.checkTurn}
+						isNew = {card.get("isNew")}
+						chooseColor = {props.chooseColor}
+						checkCard = {props.checkCard}
+						openStandardModal = {props.openStandardModal}/>
 				);
-			})}
+			}).reverse()}
 		</div>
 	);
 };

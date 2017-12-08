@@ -1,16 +1,29 @@
 To do list:
 
---iniciar o game assim que o número de jogadores for atingido
+--fazer a tela de Game
 --reformular tamnhos e disposição de items da tela hall no celular (de vdd)
 --deixar a tela Home mais amigável
---remove  load all in every change
+--remove load all in every change
+--Opção de cronometro
 
 Doing List:
 
---fazer a tela de Game
-
 Done list:
 
+--Fim de jogo
+--Alguém fez uno
+--Help
+--jogada do bot
+--check cards before send
+--carta de trocar de cor
+--cronometro
+--executar ação após timeout do cronometro
+--buy four and buy 2 actions
+--cartas acumulativas de comprar 2 e 4
+--comprar cartas
+--mobile plus one animation
+--send multiple cards
+--iniciar o game assim que o número de jogadores for atingido
 --animações de jogar carta
 --front end para chat no game
 --front end para multiplas cartas

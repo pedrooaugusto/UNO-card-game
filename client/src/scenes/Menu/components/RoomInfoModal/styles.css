@@ -1,3 +1,25 @@
+.scene--menu__roomInfo{
+	position: absolute;
+	min-width: 90%;
+	min-height: 50%;
+	top: 50%;
+	left: 50%;
+	margin-right: -50%;
+	transform: translate(-50%, -50%);
+	background-color: white;
+	border-radius: 0px;
+    right: auto;
+    bottom: auto;
+    padding: 10px;
+    margin-right: -50%;
+}
+
+@media only screen and (min-width: 601px){
+	.scene--menu__roomInfo{
+		min-width: 40%;
+	    min-height: 60%;
+	}
+}
 .modal__title{
 	font-size: 1.5rem;
 	text-align: center;

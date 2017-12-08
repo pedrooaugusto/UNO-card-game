@@ -8,25 +8,6 @@ const modalStyle = {
     overlay: {
         backgroundColor: "rgba(0, 0, 0, 0.6)",
         zIndex         : "999"
-    },
-    content : {
-        minWidth              : '40%',
-        top                   : '50%',
-        minHeight             : '50%',
-        left                  : '50%',
-        right                 : 'auto',
-        bottom                : 'auto',
-        marginRight           : '-50%',
-        transform             : 'translate(-50%, -50%)',
-        border                : "none",
-        borderRadius          : "none",
-        backgroundColor       : "white"
-    },
-    preloaderWrapper:{
-        marginTop: "50px",
-        display: "flex",
-        flexFlow: "row",
-        justifyContent: "center"
     }
 };
 
@@ -43,6 +24,7 @@ class RoomInfoModal extends Component {
     render(){
         return (
             <ReactModal
+                className = "scene--menu__roomInfo"
                 isOpen={this.props.isOpen}
                 style={modalStyle}
                 onRequestClose={this.props.onCloseRoom}

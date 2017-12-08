@@ -3,12 +3,11 @@ import PropTypes from 'prop-types';
 
 const List = ({rooms, showRoomInfo}) => {
     if(rooms.size === 0)
-        return (<p><center>Não existem salas. Você pode criar uma!</center></p>);
+        return (<center><p>Não existem salas. Você pode criar uma e jogar contra bots!</p></center>);
     return(
         <table className="bordered rooms-list">
             <thead>
                 <tr>
-                    <th></th>
                     <th></th>
                     <th></th>
                     <th></th>
@@ -24,7 +23,6 @@ const List = ({rooms, showRoomInfo}) => {
                             <td>{item.name}</td>
                             <td>{item.status}</td>
                             <td>{`${item.players.length}/${item.capacity}`}</td>
-                            <td><i className="material-icons">lock_open</i></td>
                     </tr>
                 ))
             }

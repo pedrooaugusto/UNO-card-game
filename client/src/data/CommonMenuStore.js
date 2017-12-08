@@ -24,7 +24,8 @@ class CommonMenuStore extends ReduceStore
 				isOpen: false,
 				message: '',
 				created: false
-			} 
+			},
+			aboutModal: false
 		});
 	}
 	reduce(state, action){
@@ -93,6 +94,9 @@ class CommonMenuStore extends ReduceStore
 				return state
 					.updateIn(['createRoom', 'created'], a => action.data.created)
 					.updateIn(['createRoom', 'message'], a => action.data.message);
+
+			case MenuActionTypes.MENU_MODAL_ABOUT:
+				return state.update("aboutModal", a => action.data);
 
 			default:
 				return state;

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
 
-// PROD: (??) hj nao, bb
+// PROD: (???) hj não, bb
 // DEV:  mongodb://localhost:27017/uno
 const connection = mongoose.connect('mongodb://localhost:27017/uno', {
 	useMongoClient: true

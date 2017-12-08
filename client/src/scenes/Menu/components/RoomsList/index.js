@@ -31,8 +31,8 @@ class RoomsList extends React.Component
                 <Preloader visible = {true} wrapperStyle = {wrapperStyle}/> :
                 <List rooms = {this.props.rooms} showRoomInfo = {this.showRoomInfo}/>;
         return (
-            <div className="card content z-depth-4">
-                <h5>Selecione uma sala</h5>
+            <div className="card content">
+                <div className = "content__title">Selecione uma sala</div>
                 <div className="rooms-list-wrapper">
                     {content}
                 </div>

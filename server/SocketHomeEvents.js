@@ -20,7 +20,8 @@ module.exports.disconnect = function (socket) {
             {
                 const player = room.players.find(r => r.socketId === socket.id);
                 player.remove();
-                if(room.players.length === 0)
+                if(room.players.length === 0 ||
+                    room.players.filter(a => a.name !== player.name).every(a => a.isBot))
                     await room.remove();
                 else
                     await room.save();
@@ -46,7 +47,6 @@ module.exports.disconnect = function (socket) {
 /* Trigger in init home scene */
 module.exports.joinHome = function (socket) {
     socket.on("/app/join/home", data => {
-        console.log(`\nUser ${socket.id} has been connected to the __HOME\n`);
         socket.join("__HOME");
         socket.emit("/app/join/home/success", "__HOME");
     });
@@ -141,8 +141,3 @@ module.exports.joinRoom = function (socket) {
         }
     });
 }
-
-/*
-
-["red-turn", "blue-turn", "green-turn", "yellow-turn", "red-one", "blue-one", "green-one", "yellow-one", "red-two", "blue-two", "green-two", "yellow-two", "red-three", "blue-three", "green-three", "yellow-three", "red-four", "blue-four", "green-four", "yellow-four", "red-five", "blue-five", "green-five", "yellow-five", "red-six", "blue-six", "green-six", "yellow-six", "red-seven", "blue-seven", "green-seven", "yellow-seven", "red-eight", "blue-eight", "green-eight", "yellow-eight", "red-nine", "blue-nine", "green-nine", "yellow-nine"]
-*/
