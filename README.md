@@ -12,9 +12,9 @@ Since I am using heroku for free the app will take while to start, but it will b
 
 ## WARNING
 The project is not done yet... I would say:
-* [Home] - 95% done
-* [Hall] - 95% done
-* [Game] - 50% done
+* [Home] - 99% done
+* [Hall] - 99% done
+* [Game] - 99% done
 
 ## Getting Started
 
