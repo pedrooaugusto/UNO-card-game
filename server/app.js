@@ -1,3 +1,8 @@
+/**
+ * If you are deploying this to heroku set:
+ *   heroku config:set NPM_CONFIG_PRODUCTION=false YARN_PRODUCTION=false
+ */
+
 const express = require("express");
 const session = require("express-session");
 const bodyparser = require("body-parser");
